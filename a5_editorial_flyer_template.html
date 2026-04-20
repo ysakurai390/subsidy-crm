@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A5 Editorial Flyer Template</title>
+  <style>
+    :root{
+      --bg:#d8d3ca;
+      --paper:#f3efe7;
+      --paper-2:#f7f4ee;
+      --ink:#111111;
+      --text:#1b1b1b;
+      --sub:#64605a;
+      --line:#cfc8bc;
+      --line-dark:#b8b0a3;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      background:var(--bg);
+      font-family:
+        "Helvetica Neue",
+        "Arial",
+        "Hiragino Sans",
+        "Yu Gothic",
+        sans-serif;
+      color:var(--text);
+      display:flex;
+      justify-content:center;
+      padding:24px;
+      letter-spacing:.01em;
+    }
+
+    .page{
+      width:148mm;
+      min-height:210mm;
+      background:var(--paper);
+      border:1px solid var(--line);
+      box-shadow:0 18px 40px rgba(0,0,0,.10);
+      overflow:hidden;
+    }
+
+    .hero{
+      position:relative;
+      height:78mm;
+      border-bottom:1px solid var(--line);
+      background:#c8c1b6;
+      overflow:hidden;
+    }
+
+    .hero-image{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.16), rgba(0,0,0,.42)),
+        #c9c2b7;
+    }
+
+    .hero-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      filter:saturate(.92) contrast(1.02);
+    }
+
+    .hero-image.placeholder::before{
+      content:"MAIN VISUAL";
+      position:absolute;
+      top:12px;
+      left:12px;
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.9);
+      border:1px solid rgba(255,255,255,.3);
+      background:rgba(0,0,0,.22);
+      padding:4px 8px;
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:2;
+      height:100%;
+      padding:9mm 8mm 8mm;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      color:#fff;
+    }
+
+    .hero-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    .logo-box{
+      width:34mm;
+      min-height:14mm;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      border:1px solid rgba(255,255,255,.25);
+      background:rgba(0,0,0,.18);
+      padding:4px 6px;
+    }
+
+    .logo-box img{
+      max-width:100%;
+      max-height:10mm;
+      object-fit:contain;
+      display:block;
+    }
+
+    .logo-box.placeholder::after{
+      content:"LOGO";
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.92);
+    }
+
+    .hero-nav{
+      display:flex;
+      gap:12px;
+      font-size:6.5px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      opacity:.92;
+      white-space:nowrap;
+    }
+
+    .eyebrow{
+      font-size:6.5px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      opacity:.9;
+      margin-bottom:3mm;
+    }
+
+    h1{
+      margin:0 0 2.5mm;
+      font-size:20pt;
+      line-height:1.0;
+      letter-spacing:-.05em;
+      font-weight:800;
+    }
+
+    .hero-text{
+      margin:0;
+      max-width:108mm;
+      font-size:8pt;
+      line-height:1.7;
+      color:rgba(255,255,255,.92);
+    }
+
+    .body{
+      background:var(--paper);
+      padding:8mm;
+    }
+
+    .section{
+      border-top:1px solid var(--line);
+      padding:7mm 0;
+    }
+
+    .section:first-child{
+      border-top:none;
+      padding-top:0;
+    }
+
+    .section-label{
+      font-size:7px;
+      text-transform:uppercase;
+      letter-spacing:.20em;
+      color:var(--sub);
+      margin-bottom:5mm;
+    }
+
+    .intro-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:0;
+      border:1px solid var(--line);
+      background:var(--paper-2);
+    }
+
+    .intro-copy,
+    .intro-side{
+      padding:5.5mm;
+      min-height:40mm;
+    }
+
+    .intro-copy{
+      border-right:1px solid var(--line);
+    }
+
+    .intro-title{
+      margin:0 0 3mm;
+      font-size:15pt;
+      line-height:1.1;
+      letter-spacing:-.04em;
+      font-weight:800;
+    }
+
+    .intro-desc{
+      margin:0;
+      font-size:8.5pt;
+      line-height:1.75;
+      color:var(--sub);
+    }
+
+    .mini-box{
+      border:1px solid var(--line);
+      background:#fcfaf6;
+      padding:4mm;
+      min-height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .mini-box .mini-label{
+      font-size:7px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--sub);
+      margin-bottom:3mm;
+    }
+
+    .mini-box .mini-text{
+      font-size:10pt;
+      line-height:1.45;
+      font-weight:700;
+      color:var(--ink);
+    }
+
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      border:1px solid var(--line);
+      background:var(--paper-2);
+    }
+
+    .step{
+      min-height:43mm;
+      padding:5mm 4mm;
+      border-right:1px solid var(--line);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      align-items:flex-start;
+    }
+
+    .step:last-child{
+      border-right:none;
+    }
+
+    .step-no{
+      font-size:7px;
+      letter-spacing:.20em;
+      text-transform:uppercase;
+      color:var(--sub);
+    }
+
+    .step-icon{
+      width:14mm;
+      height:14mm;
+      border:1px solid var(--line);
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      line-height:1;
+      margin:4mm 0 3mm;
+      color:var(--ink);
+    }
+
+    .step-title{
+      margin:0 0 2mm;
+      font-size:10pt;
+      line-height:1.4;
+      font-weight:800;
+    }
+
+    .step-text{
+      margin:0;
+      font-size:7.5pt;
+      line-height:1.65;
+      color:var(--sub);
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:.95fr 1.05fr;
+      border:1px solid var(--line);
+      background:var(--paper-2);
+    }
+
+    .split-image{
+      min-height:52mm;
+      position:relative;
+      border-right:1px solid var(--line);
+      background:#d3ccc1;
+      overflow:hidden;
+    }
+
+    .split-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .split-image.placeholder::before{
+      content:"SUB IMAGE";
+      position:absolute;
+      top:10px;
+      left:10px;
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(0,0,0,.72);
+      border:1px solid rgba(0,0,0,.14);
+      background:rgba(255,255,255,.72);
+      padding:4px 8px;
+    }
+
+    .split-copy{
+      padding:5.5mm;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .split-copy .mini{
+      font-size:7px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--sub);
+      margin-bottom:3mm;
+    }
+
+    .split-copy h2{
+      margin:0 0 3mm;
+      font-size:15pt;
+      line-height:1.08;
+      letter-spacing:-.04em;
+      font-weight:800;
+      color:var(--ink);
+    }
+
+    .split-copy p{
+      margin:0;
+      font-size:8.5pt;
+      line-height:1.75;
+      color:var(--sub);
+    }
+
+    .cta{
+      border:1px solid var(--ink);
+      background:#faf7f1;
+      padding:6.5mm;
+      display:grid;
+      grid-template-columns:1fr 34mm;
+      gap:6mm;
+      align-items:center;
+    }
+
+    .cta-copy h3{
+      margin:0 0 2.5mm;
+      font-size:15pt;
+      line-height:1.12;
+      letter-spacing:-.04em;
+      font-weight:800;
+    }
+
+    .cta-copy p{
+      margin:0;
+      font-size:8.5pt;
+      line-height:1.7;
+      color:var(--sub);
+    }
+
+    .qr-box{
+      width:34mm;
+      height:34mm;
+      border:1px solid var(--line-dark);
+      background:
+        linear-gradient(90deg,#000 12%,transparent 12% 24%,#000 24% 36%,transparent 36% 48%,#000 48% 60%,transparent 60% 72%,#000 72% 84%,transparent 84%),
+        linear-gradient(#000 12%,transparent 12% 24%,#000 24% 36%,transparent 36% 48%,#000 48% 60%,transparent 60% 72%,#000 72% 84%,transparent 84%);
+      background-size:8mm 8mm;
+      background-color:#fff;
+      position:relative;
+    }
+
+    .qr-box::after{
+      content:"QR";
+      position:absolute;
+      inset:auto 0 4px 0;
+      text-align:center;
+      font-size:8px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:#000;
+      background:rgba(255,255,255,.84);
+    }
+
+    .footer{
+      margin-top:4mm;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      font-size:7px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--sub);
+    }
+
+    @media screen and (max-width: 760px){
+      body{padding:10px}
+      .page{
+        width:100%;
+        min-height:auto;
+      }
+      .hero{
+        height:420px;
+      }
+      .hero-nav{
+        display:none;
+      }
+      .intro-grid,
+      .steps,
+      .split,
+      .cta{
+        grid-template-columns:1fr;
+      }
+      .intro-copy,
+      .split-image{
+        border-right:none;
+        border-bottom:1px solid var(--line);
+      }
+      .step{
+        border-right:none;
+        border-bottom:1px solid var(--line);
+      }
+      .step:last-child{
+        border-bottom:none;
+      }
+      .qr-box{
+        margin:0 auto;
+      }
+      .footer{
+        flex-direction:column;
+      }
+    }
+
+    @page{
+      size:A5 portrait;
+      margin:0;
+    }
+
+    @media print{
+      body{
+        background:#fff;
+        padding:0;
+      }
+      .page{
+        width:148mm;
+        min-height:210mm;
+        box-shadow:none;
+        border:none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <article class="page">
+
+    <section class="hero">
+      <div class="hero-image placeholder">
+        <!-- 画像を入れるときは下を使う -->
+        <!-- <img src="main-visual.jpg" alt="メインビジュアル"> -->
+      </div>
+
+      <div class="hero-content">
+        <div class="hero-top">
+          <div class="logo-box placeholder">
+            <!-- <img src="logo.png" alt="logo"> -->
+          </div>
+
+          <div class="hero-nav">
+            <span>ABOUT</span>
+            <span>FEATURE</span>
+            <span>ACCESS</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="eyebrow">EDITORIAL A5 FLYER TEMPLATE</div>
+          <h1>
+            ここにキャッチコピー。<br>
+            ここにキャッチコピー。
+          </h1>
+          <p class="hero-text">
+            ここに短い説明文を入れます。ブランド紹介、サービス紹介、施設案内、
+            商品の魅力などを2〜3行で簡潔にまとめる想定です。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="body">
+
+      <section class="section">
+        <div class="section-label">INTRO</div>
+
+        <div class="intro-grid">
+          <div class="intro-copy">
+            <h2 class="intro-title">ここに中見出しを入れる。</h2>
+            <p class="intro-desc">
+              ここに本文を入れます。静かな余白感を保つため、文章量は多すぎず、
+              2〜4行程度に収めるときれいに見えます。
+            </p>
+          </div>
+
+          <div class="intro-side">
+            <div class="mini-box">
+              <div class="mini-label">INFO</div>
+              <div class="mini-text">
+                日付 / 場所 / 料金 / 対象など、<br>
+                補足情報を入れるエリア
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-label">HOW TO USE / FEATURE / GUIDE</div>
+
+        <div class="steps">
+          <article class="step">
+            <div>
+              <div class="step-no">Step 01</div>
+              <div class="step-icon">↓</div>
+            </div>
+            <div>
+              <h3 class="step-title">ここに短い見出し</h3>
+              <p class="step-text">1つ目の説明文。短めに入れると整います。</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <div class="step-no">Step 02</div>
+              <div class="step-icon">□</div>
+            </div>
+            <div>
+              <h3 class="step-title">ここに短い見出し</h3>
+              <p class="step-text">2つ目の説明文。短めに入れると整います。</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <div class="step-no">Step 03</div>
+              <div class="step-icon">✓</div>
+            </div>
+            <div>
+              <h3 class="step-title">ここに短い見出し</h3>
+              <p class="step-text">3つ目の説明文。短めに入れると整います。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-label">IMAGE & COPY</div>
+
+        <div class="split">
+          <div class="split-image placeholder">
+            <!-- <img src="sub-image.jpg" alt="サブ画像"> -->
+          </div>
+
+          <div class="split-copy">
+            <div>
+              <div class="mini">SUB COPY</div>
+              <h2>ここに訴求を入れる。</h2>
+              <p>
+                ここには写真とセットで見せる説明文を入れます。
+                ブランドの世界観、商品の特徴、施設の魅力などを
+                3〜5行で簡潔にまとめると雰囲気が出ます。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="cta">
+          <div class="cta-copy">
+            <h3>ここにCTAを入れる。</h3>
+            <p>
+              QRコード、申込導線、Webサイト誘導、予約導線などを置く想定です。
+            </p>
+          </div>
+
+          <div class="qr-box" aria-label="QR placeholder"></div>
+        </div>
+
+        <div class="footer">
+          <span>YOUR BRAND / A5 TEMPLATE</span>
+          <span>WEB / STORE / PRINT</span>
+        </div>
+      </section>
+
+    </div>
+  </article>
+</body>
+</html>

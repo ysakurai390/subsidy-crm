@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HUV A5 Flyer</title>
+  <style>
+    :root{
+      --paper:#f8f6f0;
+      --ink:#151515;
+      --sub:#5e5a52;
+      --line:#d6d0c4;
+      --soft:#ece7dc;
+      --accent:#111111;
+    }
+
+    *{box-sizing:border-box}
+
+    @page{
+      size:A5 portrait;
+      margin:0;
+    }
+
+    body{
+      margin:0;
+      background:#dfdbd2;
+      color:var(--ink);
+      font-family:
+        "Helvetica Neue",
+        "Arial",
+        "Hiragino Sans",
+        "Yu Gothic",
+        sans-serif;
+    }
+
+    .sheet{
+      width:148mm;
+      min-height:210mm;
+      margin:18px auto;
+      background:var(--paper);
+      box-shadow:0 24px 60px rgba(0,0,0,.14);
+      overflow:hidden;
+    }
+
+    .frame{
+      padding:10mm 10mm 9mm;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:center;
+      padding-bottom:6mm;
+      border-bottom:1px solid var(--line);
+    }
+
+    .topbar img{
+      width:54mm;
+      height:auto;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:5mm;
+      padding:6mm 0 5mm;
+      border-bottom:1px solid var(--line);
+    }
+
+    .hero-visual{
+      min-height:68mm;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.18)),
+        url("./images/gallery-slide-2.jpg") center/cover no-repeat;
+      position:relative;
+    }
+
+    .hero-visual::after{
+      content:"BEPPU / HOTEL / LOCAL TRIP";
+      position:absolute;
+      left:4mm;
+      bottom:3.5mm;
+      font-size:7.5pt;
+      letter-spacing:.18em;
+      color:#fff;
+    }
+
+    .hero-copy{
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:68mm;
+    }
+
+    .eyebrow{
+      font-size:7pt;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      color:var(--sub);
+    }
+
+    h1{
+      margin:2mm 0 3mm;
+      font-size:24pt;
+      line-height:.96;
+      letter-spacing:-.06em;
+      text-transform:uppercase;
+    }
+
+    .lead{
+      margin:0;
+      font-size:9.3pt;
+      line-height:1.55;
+      color:var(--sub);
+    }
+
+    .lead strong{
+      color:var(--ink);
+      font-weight:700;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .block{
+      padding:5mm 0;
+    }
+
+    .block + .block{
+      padding-left:5mm;
+      margin-left:5mm;
+      border-left:1px solid var(--line);
+    }
+
+    .block-label{
+      margin:0 0 2.5mm;
+      font-size:7pt;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:var(--sub);
+    }
+
+    .value-points{
+      display:grid;
+      gap:2.4mm;
+    }
+
+    .value-item{
+      padding:2.5mm 0 0;
+      border-top:1px solid var(--soft);
+    }
+
+    .value-item:first-child{
+      padding-top:0;
+      border-top:none;
+    }
+
+    .value-item strong{
+      display:block;
+      margin-bottom:1mm;
+      font-size:11pt;
+      line-height:1.3;
+    }
+
+    .value-item span{
+      display:block;
+      font-size:8.6pt;
+      line-height:1.5;
+      color:var(--sub);
+    }
+
+    .vehicle-note{
+      margin:0;
+      font-size:8.8pt;
+      line-height:1.7;
+      color:var(--sub);
+    }
+
+    .vehicle-note strong{
+      color:var(--ink);
+    }
+
+    .howto{
+      padding:5mm 0 5.5mm;
+      border-bottom:1px solid var(--line);
+    }
+
+    .section-label{
+      margin:0 0 3.5mm;
+      font-size:7pt;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      color:var(--sub);
+    }
+
+    .step-list{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:4mm;
+    }
+
+    .step{
+      text-align:center;
+    }
+
+    .step-num{
+      margin-bottom:2mm;
+      font-size:8pt;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--ink);
+    }
+
+    .step-icon{
+      width:18mm;
+      height:18mm;
+      margin:0 auto 2.5mm;
+      object-fit:contain;
+    }
+
+    .step h2{
+      margin:0 0 1.5mm;
+      font-size:10pt;
+      line-height:1.4;
+    }
+
+    .step p{
+      margin:0;
+      font-size:8.2pt;
+      line-height:1.55;
+      color:var(--sub);
+    }
+
+    .bottom{
+      display:grid;
+      grid-template-columns:.92fr 1.08fr;
+      gap:5mm;
+      padding-top:5mm;
+    }
+
+    .qr-panel{
+      border:1px solid var(--line);
+      padding:4.5mm;
+      display:grid;
+      gap:3mm;
+      align-content:start;
+    }
+
+    .qr-title{
+      margin:0;
+      font-size:8pt;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:var(--sub);
+    }
+
+    .qr-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:3mm;
+    }
+
+    .qr-card{
+      text-align:center;
+    }
+
+    .qr-card img{
+      width:100%;
+      max-width:26mm;
+      margin:0 auto 1.8mm;
+    }
+
+    .qr-card strong{
+      display:block;
+      margin-bottom:.8mm;
+      font-size:7.8pt;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .qr-card span{
+      display:block;
+      font-size:7.1pt;
+      line-height:1.45;
+      color:var(--sub);
+    }
+
+    .info{
+      display:grid;
+      gap:4mm;
+      align-content:start;
+    }
+
+    .info-copy{
+      padding:4.5mm;
+      border:1px solid var(--line);
+      min-height:100%;
+    }
+
+    .info-copy h3{
+      margin:0 0 2.5mm;
+      font-size:17pt;
+      line-height:1.06;
+      letter-spacing:-.05em;
+    }
+
+    .info-copy p{
+      margin:0;
+      font-size:8.8pt;
+      line-height:1.65;
+      color:var(--sub);
+    }
+
+    .info-mini{
+      display:grid;
+      gap:1.1mm;
+      font-size:7.6pt;
+      color:var(--sub);
+    }
+
+    .info-mini strong{
+      color:var(--ink);
+    }
+
+    .print-note{
+      display:none;
+    }
+
+    @media screen and (max-width: 900px){
+      .sheet{
+        width:min(148mm, calc(100vw - 24px));
+        margin:12px auto;
+      }
+    }
+
+    @media print{
+      body{
+        background:#fff;
+      }
+
+      .sheet{
+        width:148mm;
+        min-height:210mm;
+        margin:0;
+        box-shadow:none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <article class="sheet">
+    <div class="frame">
+      <header class="topbar">
+        <img src="./images/huv-logo-horizontal-trimmed.png" alt="HUV ロゴ" />
+      </header>
+
+      <section class="hero">
+        <div class="hero-visual" aria-label="HUVの利用イメージ写真"></div>
+        <div class="hero-copy">
+          <div>
+            <p class="eyebrow">HUV / BEPPU MOBILITY EXPERIENCE</p>
+            <h1>移動が変わると、<br />滞在も変わる。</h1>
+          </div>
+          <p class="lead">
+            HUVは、旅先での滞在をもっと自由に、もっと心地よくするモビリティ。<br />
+            徒歩では少し遠く、タクシーでは少し近い。<br />
+            <strong>そのちょうどいい距離</strong>を、自分のペースで、静かに、軽やかに移動できます。
+          </p>
+        </div>
+      </section>
+
+      <section class="split">
+        <div class="block">
+          <p class="block-label">Why HUV</p>
+          <div class="value-points">
+            <div class="value-item">
+              <strong>16歳以上、免許不要で利用可能</strong>
+              <span>特定小型原付区分に対応した電動サイクルだから、旅先でも使いやすい。</span>
+            </div>
+            <div class="value-item">
+              <strong>宿泊先で借りて、そのまま返却</strong>
+              <span>観光も食事も寄り道も、滞在の流れを止めずに楽しめます。</span>
+            </div>
+            <div class="value-item">
+              <strong>坂の多い別府でも、もっとスムーズに</strong>
+              <span>体力を使いすぎず、少し先の景色やお店にも気軽に立ち寄れます。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <p class="block-label">Mobility</p>
+          <p class="vehicle-note">
+            HUVで採用するモビリティは、<strong>16歳以上なら免許不要</strong>で利用できる、旅先で扱いやすい電動サイクルです。<br />
+            採用車両は <strong>glafit NFR-01 Pro</strong>。静かでスマートな移動体験を、別府の滞在に自然になじむかたちで提供します。
+          </p>
+        </div>
+      </section>
+
+      <section class="howto">
+        <p class="section-label">How To Use</p>
+        <div class="step-list">
+          <article class="step">
+            <div class="step-num">Step 01</div>
+            <img class="step-icon" src="./images/howto-app.png" alt="アプリのアイコン" />
+            <h2>アプリをダウンロードして予約</h2>
+            <p>無料アプリから車両と利用時間を選んで、そのままスマートに予約できます。</p>
+          </article>
+
+          <article class="step">
+            <div class="step-num">Step 02</div>
+            <img class="step-icon" src="./images/howto-unlock.png" alt="開錠のアイコン" />
+            <h2>アプリを通じて開錠</h2>
+            <p>現地ではアプリからそのまま開錠。複雑な手続きなしで、すぐ出発できます。</p>
+          </article>
+
+          <article class="step">
+            <div class="step-num">Step 03</div>
+            <img class="step-icon" src="./images/howto-payment.png" alt="決済のアイコン" />
+            <h2>決済もアプリで完結</h2>
+            <p>返却後までスムーズ。利用終了後の決済もアプリ上でそのまま完了します。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="bottom">
+        <div class="qr-panel">
+          <p class="qr-title">Download Here</p>
+          <div class="qr-grid">
+            <div class="qr-card">
+              <img src="./images/glafit-ios-qr.png" alt="iOS QRコード" />
+              <strong>iPhone</strong>
+              <span>App Storeから<br />ダウンロード</span>
+            </div>
+            <div class="qr-card">
+              <img src="./images/glafit-google-qr.png" alt="Android QRコード" />
+              <strong>Android</strong>
+              <span>Google Playから<br />ダウンロード</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="info-copy">
+            <p class="block-label">Stay More. Move Light.</p>
+            <h3>宿泊先で借りて、<br />そのまま返せる。</h3>
+            <p>移動も滞在の一部として自然につながる。HUVは、別府での時間をもっと自由に広げるためのモビリティサービスです。</p>
+          </div>
+
+          <div class="info-mini">
+            <div><strong>運営会社</strong> 株式会社NanoAct（ナノアクト）</div>
+            <div><strong>所在地</strong> 〒870-0021 大分県大分市府内町3-4-20 大分恒和ビル4階</div>
+            <div><strong>TEL</strong> 052-898-2905</div>
+            <div><strong>MAIL</strong> info@nanoact.jp</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
+</body>
+</html>

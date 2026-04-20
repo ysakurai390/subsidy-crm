@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HUV A5 Flyer</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root{
+      --bg:#f3f1eb;
+      --paper:#f7f5ef;
+      --paper-soft:#fbf9f3;
+      --ink:#151515;
+      --sub:#595959;
+      --line:#cfc9be;
+      --line-soft:#aaa394;
+      --placeholder:#d7d0c4;
+      --accent-brown:#4b3f34;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg);
+      font-family:
+        "Helvetica Neue",
+        "Arial",
+        "Hiragino Sans",
+        "Yu Gothic",
+        sans-serif;
+      color: var(--ink);
+    }
+
+    .sheet {
+      width: 148mm;
+      height: 210mm;
+      margin: 0 auto;
+      background: var(--paper);
+      border:1px solid var(--line);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero {
+      position: relative;
+      height: 78mm;
+      overflow: visible;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(135deg, #d7d0c4, #c7beb1);
+    }
+
+    .hero-media{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+      background:#d7d0c4;
+    }
+
+    .hero-media::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,.34), rgba(0,0,0,.06));
+      pointer-events:none;
+    }
+
+    .hero-media img{
+      position:absolute;
+      left:0;
+      top:50%;
+      width:100%;
+      height:auto;
+      transform:translateY(-50%);
+      display:block;
+    }
+
+    .hero-logo{
+      position:absolute;
+      top:16px;
+      left:16px;
+      width:142px;
+      z-index:2;
+    }
+
+    .hero-logo img{
+      width:100%;
+      height:auto;
+      filter:invert(1) drop-shadow(0 1px 10px rgba(0,0,0,.24));
+      display:block;
+    }
+
+    .hero-text {
+      position: absolute;
+      left: 14px;
+      bottom: 2px;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+      z-index: 3;
+      width: 90%;
+    }
+
+    .eyebrow {
+      font-size: 6.6px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+      color: #fff9f3;
+      text-shadow:none;
+    }
+
+    .title {
+      font-size: 18.5pt;
+      font-weight: 800;
+      line-height: 1.17;
+      margin: 0;
+      letter-spacing: -0.03em;
+      color: #fffdf8;
+      text-shadow:none;
+    }
+
+    .title-accent{
+      color:#a8896a;
+      text-shadow:none;
+    }
+
+    .title-white{
+      color:#fffdf8;
+      text-shadow:none;
+    }
+
+    .title-dark{
+      color:#fffdf8;
+      text-shadow:none;
+    }
+
+    .content {
+      height: calc(210mm - 78mm);
+      min-height: 0;
+      padding: 28px 0 0;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+    }
+
+    .mobility-section{
+      margin:0 14px 8px;
+      padding:6px 10px 7px;
+      border:none;
+      background:transparent;
+      display:grid;
+      grid-template-columns:288px 1fr;
+      gap:10px;
+      align-items:stretch;
+      position:relative;
+      overflow:visible;
+    }
+
+    .mobility-copy{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:5px;
+      min-width:0;
+      order:2;
+      padding-left:6px;
+    }
+
+    .mobility-kicker{
+      font-size:7px;
+      line-height:1.1;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--sub);
+    }
+
+    .mobility-text{
+      margin:0;
+      font-size:10.2px;
+      line-height:1.45;
+      color:var(--ink);
+      letter-spacing:.01em;
+    }
+
+    .mobility-text strong{
+      font-weight:800;
+    }
+
+    .mobility-visuals{
+      display:grid;
+      grid-template-columns:1fr;
+      grid-template-rows:auto;
+      gap:0;
+      position:relative;
+      width:288px;
+      min-height:0;
+      order:1;
+      overflow:visible;
+      transform:translateY(6px);
+    }
+
+    .mobility-photo{
+      position:relative;
+      width:238px;
+      aspect-ratio:8192 / 5464;
+      min-height:0;
+      background:
+        linear-gradient(180deg, rgba(215,208,196,.55), rgba(215,208,196,.3)),
+        var(--paper-soft);
+      border:1px solid rgba(207,201,190,.65);
+      overflow:hidden;
+    }
+
+    .mobility-photo::before{
+      content:"IMAGE";
+      position:absolute;
+      top:8px;
+      left:8px;
+      font-size:7px;
+      line-height:1;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--sub);
+      background:rgba(255,255,255,.86);
+      padding:4px 6px;
+    }
+
+    .mobility-photo img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center center;
+      display:block;
+    }
+
+    .mobility-photo.large{
+      min-height:0;
+      background-image:url("./images/mobility-top.jpg");
+      background-size:cover;
+      background-repeat:no-repeat;
+      background-position:center -18px;
+      background-color:transparent;
+      border:none;
+    }
+
+    .mobility-photo.large::before{
+      content:none;
+    }
+
+    .mobility-photo.large img{
+      display:none;
+    }
+
+    .mobility-photo.small{
+      display:none;
+    }
+
+    .mobility-price{
+      position:absolute;
+      left:202px;
+      top:0;
+      width:78px;
+      height:78px;
+      padding:0;
+      border-radius:50%;
+      background:rgba(255,255,255,.9);
+      border:1px solid rgba(75,63,52,.22);
+      box-shadow:none;
+      text-align:center;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .mobility-price-inner{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      line-height:1;
+      transform:translateY(0);
+    }
+
+    .mobility-price strong{
+      display:block;
+      font-size:9px;
+      line-height:1.05;
+      color:var(--ink);
+      letter-spacing:.02em;
+      font-family:"Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-weight:800;
+    }
+
+    .mobility-price span{
+      display:block;
+      margin-top:2px;
+      font-size:10px;
+      line-height:1.02;
+      letter-spacing:-.04em;
+      text-transform:none;
+      font-family:"Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-weight:800;
+      color:var(--ink);
+    }
+
+    .mobility-price small{
+      display:block;
+      margin-top:2px;
+      font-size:13px;
+      line-height:1.02;
+      letter-spacing:-.04em;
+      text-transform:none;
+      font-family:"Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-weight:800;
+      color:var(--ink);
+    }
+
+    .mobility-note{
+      position:absolute;
+      left:6px;
+      top:10px;
+      background:rgba(255,255,255,.9);
+      color:var(--ink);
+      font-size:7px;
+      line-height:1.35;
+      letter-spacing:.01em;
+      padding:5px 8px 4px;
+      z-index:2;
+    }
+
+    .howto-section{
+      width:100%;
+      margin:0;
+      padding:0;
+    }
+
+    .howto-title{
+      margin:0 auto -8px;
+      padding:0 14px;
+      text-align:center;
+      font-size:10px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--sub);
+      border-bottom:none;
+      width:max-content;
+      background:linear-gradient(to bottom, var(--paper) 0 45%, #fff 45% 100%);
+      position:relative;
+      z-index:2;
+    }
+
+    .howto-card{
+      position:relative;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      border-left:none;
+      border-right:none;
+      background:#fff;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:0;
+      padding:10px 4px 8px;
+    }
+
+    .howto-item{
+      text-align:center;
+      position:relative;
+      padding:0 4px 2px;
+      min-height:84px;
+    }
+
+
+    .howto-inner{
+      background:transparent;
+      border:none;
+      padding:2px 5px 2px;
+      min-height:100%;
+    }
+
+    .howto-item::after{
+      content:none;
+    }
+
+    .howto-item + .howto-item{
+      border-left:none;
+    }
+
+    .howto-step{
+      margin:0;
+      font-size:11px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      color:var(--ink);
+      font-weight:700;
+      line-height:1.1;
+      position:relative;
+      top:4px;
+    }
+
+    .howto-circle{
+      width:88px;
+      height:88px;
+      margin:0 auto -6px;
+      border-radius:0;
+      background:transparent;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:none;
+    }
+
+    .howto-circle img{
+      width:56px;
+      height:56px;
+      object-fit:contain;
+      display:block;
+      opacity:1;
+    }
+
+    .howto-item:nth-child(2) .howto-circle img{
+      width:92px;
+      height:92px;
+    }
+
+    .howto-item:nth-child(3) .howto-circle img{
+      width:76px;
+      height:76px;
+    }
+
+    .howto-comment{
+      margin:0;
+      font-size:12px;
+      line-height:1.18;
+      color:var(--ink);
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .howto-subtext{
+      margin:0;
+      font-size:8px;
+      line-height:1.22;
+      color:var(--sub);
+    }
+
+    .info-strip{
+      margin-top:14px;
+      border-top:none;
+      border-bottom:none;
+      background:var(--paper);
+      display:grid;
+      grid-template-columns:1.26fr .74fr;
+      min-height:132px;
+      align-items:stretch;
+    }
+
+    .info-block{
+      padding:7px 12px;
+      min-height:132px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+    }
+
+    .info-strip .info-block:first-child{
+      padding-left:28px;
+      padding-right:0;
+      min-height:150px;
+    }
+
+    .info-block + .info-block{
+      border-left:1px solid var(--line);
+    }
+
+    .info-title{
+      margin:0 0 4px;
+      font-size:9px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--sub);
+      text-align:left;
+    }
+
+    .lp-row{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:6px;
+      align-items:start;
+      margin-top:1px;
+      margin-bottom:6px;
+    }
+
+    .app-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      justify-content:center;
+      width:max-content;
+      margin-left:auto;
+      margin-right:auto;
+      margin-top:1px;
+      align-items:start;
+    }
+
+    .lp-row .qr-card img{
+      width:62px;
+      height:62px;
+    }
+
+    .company{
+      display:grid;
+      gap:3px;
+      font-size:7.8px;
+      line-height:1.5;
+      color:var(--sub);
+      align-content:center;
+      min-height:100%;
+      position:relative;
+      left:1px;
+    }
+
+    .company strong{
+      color:var(--ink);
+    }
+
+    .company-row{
+      display:grid;
+      grid-template-columns:38px 1fr;
+      gap:5px;
+      align-items:start;
+    }
+
+    .company-row.indent .company-label{
+      visibility:hidden;
+    }
+
+    .company-label{
+      color:var(--ink);
+      font-weight:700;
+      letter-spacing:.04em;
+    }
+
+    .company-value{
+      color:var(--sub);
+      white-space:nowrap;
+    }
+
+    .app-card{
+      text-align:center;
+    }
+
+    .app-card img{
+      width:58px;
+      height:58px;
+      display:block;
+      margin:0 auto 3px;
+      background:#fff;
+      border:1px solid var(--line);
+      padding:2px;
+      object-fit:contain;
+    }
+
+    .app-card strong{
+      display:block;
+      font-size:8px;
+      line-height:1.3;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      margin-bottom:1px;
+    }
+
+    .app-card span{
+      display:block;
+      font-size:7px;
+      line-height:1.35;
+      color:var(--sub);
+    }
+
+    .info-strip .info-block:last-child{
+      padding-left:0;
+      padding-right:0;
+      align-items:flex-start;
+    }
+
+    .info-strip .info-block:last-child .info-title{
+      padding-left:10px;
+    }
+
+    .info-strip .qr-card strong{
+      display:block;
+      font-size:8.8px;
+      line-height:1.2;
+      white-space:nowrap;
+      text-align:center;
+      margin-bottom:1px;
+    }
+
+    .info-strip .qr-card span{
+      display:block;
+      font-size:6.8px;
+      line-height:1.25;
+      text-align:center;
+    }
+
+    .info-strip .info-block:first-child .qr-card{
+      position:relative;
+      left:28px;
+    }
+
+
+    @media (max-width: 900px) {
+      body { padding: 12px; }
+      .sheet { width: 100%; }
+      .title { font-size: 17pt; }
+      .hero-text{width:86%}
+      .mobility-section{grid-template-columns:1fr}
+      .mobility-copy{order:2}
+      .mobility-visuals{grid-template-columns:1fr; grid-template-rows:1fr 1fr; order:1}
+      .howto-card{grid-template-columns:1fr}
+      .howto-item + .howto-item{border-left:none;border-top:none}
+      .info-strip{grid-template-columns:1fr}
+      .info-block + .info-block{border-left:none;border-top:1px solid var(--line)}
+    }
+
+    @page{
+      size:A5 portrait;
+      margin:0;
+    }
+
+    @media print{
+      body{
+        background:#fff;
+        padding:0;
+      }
+      .sheet{
+        width:148mm;
+        height:210mm;
+        box-shadow:none;
+      }
+      .title { font-size: 18.5pt; }
+      .hero-text{width:90%}
+      .mobility-section{grid-template-columns:272px 1fr}
+      .mobility-copy{order:2}
+      .mobility-visuals{
+        grid-template-columns:1fr;
+        grid-template-rows:auto;
+        width:272px;
+        gap:0;
+        order:1;
+      }
+      .howto-card{grid-template-columns:repeat(3, 1fr)}
+      .howto-item + .howto-item{border-top:none}
+      .info-strip{grid-template-columns:1.26fr .74fr}
+      .info-block + .info-block{
+        border-top:none;
+        border-left:1px solid var(--line);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <section class="hero">
+      <div class="hero-media">
+        <img src="./images/flyer-main-crop.png" alt="HUV メインビジュアル" />
+      </div>
+      <div class="hero-logo">
+        <img src="./images/huv-logo-horizontal-trimmed.png" alt="HUV ロゴ" />
+      </div>
+      <div class="hero-text">
+        <div class="eyebrow">HUV / Beppu Mobility Experience</div>
+        <h1 class="title">
+          宿泊者限定。<br>
+          免許不要の特定小型原付を、<br>
+          <span class="title-white">宿で借りて宿に返せる、</span><br>
+          <span class="title-dark">滞在型モビリティサービス。</span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="content">
+      <section class="mobility-section">
+        <div class="mobility-visuals">
+          <div class="mobility-photo large">
+            <img src="./images/mobility-top.jpg" alt="カフェ前に停車したglafit">
+          </div>
+          <div class="mobility-price">
+            <div class="mobility-price-inner">
+              <strong>PRICE</strong>
+              <span>15分</span>
+              <small>375円〜</small>
+            </div>
+          </div>
+          <div class="mobility-note">短時間の移動にも、気軽に使える料金設定です。</div>
+        </div>
+        <div class="mobility-copy">
+          <div class="mobility-kicker">Mobility Overview</div>
+          <p class="mobility-text">
+            <strong>徒歩では少し遠く、車では少し近い。</strong><br>
+            HUVは、そんな“ちょうどいい距離”を<br>
+            軽やかに移動できる電動のモビリティです。<br>
+            16歳以上なら免許不要で、<br>
+            坂の多い別府でも気軽に使えます。
+          </p>
+        </div>
+      </section>
+
+      <section class="howto-section">
+        <h2 class="howto-title">How To Use</h2>
+        <div class="howto-card">
+          <article class="howto-item">
+            <div class="howto-inner">
+              <div class="howto-step">Step 01</div>
+              <div class="howto-circle">
+                <img src="./images/howto-app.png" alt="アプリのアイコン">
+              </div>
+              <p class="howto-comment">無料アプリで簡単予約</p>
+              <p class="howto-subtext">無料アプリをダウンロードし、<br>車両と時間を選んでそのまま予約。</p>
+            </div>
+          </article>
+
+          <article class="howto-item">
+            <div class="howto-inner">
+              <div class="howto-step">Step 02</div>
+              <div class="howto-circle">
+                <img src="./images/howto-unlock.png" alt="開錠のアイコン">
+              </div>
+              <p class="howto-comment">アプリを通じて開錠</p>
+              <p class="howto-subtext">現地ではアプリからそのまま開錠。<br>手続きなしで、すぐに出発できます。</p>
+            </div>
+          </article>
+
+          <article class="howto-item">
+            <div class="howto-inner">
+              <div class="howto-step">Step 03</div>
+              <div class="howto-circle">
+                <img src="./images/howto-payment.png" alt="決済のアイコン">
+              </div>
+              <p class="howto-comment">決済もアプリで完結</p>
+              <p class="howto-subtext">決済までアプリで完結。<br>観光中もスムーズに利用できます。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="info-strip">
+        <div class="info-block">
+          <div class="info-title">Company &amp; HUV Information</div>
+          <div class="lp-row">
+            <div class="company">
+              <div class="company-row">
+                <div class="company-label">会社名</div>
+                <div class="company-value">株式会社NanoAct（ナノアクト）</div>
+              </div>
+              <div class="company-row">
+                <div class="company-label">所在地</div>
+                <div class="company-value">大分県大分市府内町3-4-20 大分恒和ビル４階</div>
+              </div>
+              <div class="company-row">
+                <div class="company-label">TEL</div>
+                <div class="company-value">052-898-2905</div>
+              </div>
+              <div class="company-row">
+                <div class="company-label">FAX</div>
+                <div class="company-value">052-856-3221</div>
+              </div>
+              <div class="company-row">
+                <div class="company-label">MAIL</div>
+                <div class="company-value">info@nanoact.jp</div>
+              </div>
+            </div>
+            <div class="qr-card">
+              <img src="./images/huv-service-qr.png" alt="HUV Service PageのQRコード">
+              <strong>HUV</strong>
+              <span>Service Page</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-title">Free Download</div>
+          <div class="app-grid">
+            <div class="app-card">
+              <img src="./images/glafit-ios-qr.png" alt="iOS QRコード">
+              <strong>iPhone</strong>
+              <span>App Store</span>
+            </div>
+            <div class="app-card">
+              <img src="./images/glafit-google-qr.png" alt="Android QRコード">
+              <strong>Android</strong>
+              <span>Google Play</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </div>
+</body>
+</html>

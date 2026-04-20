@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HUV | 自賠責保険閲覧ポータル</title>
+  <link rel="stylesheet" href="./styles/huv-insurance-demo.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="./huv_insurance_portal.html" aria-label="HUV 自賠責保険閲覧ポータル">
+        <img src="./images/huv-logo-horizontal-trimmed.png" alt="HUV" />
+        <div class="brand-copy">
+          <span class="eyebrow">Insurance Viewer</span>
+          <strong>特定小型原付 自賠責保険閲覧ポータル</strong>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <a class="btn btn-dark" href="./huv_insurance_admin.html" data-admin-link>管理者ページ</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="wrap">
+      <section class="hero">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <div>
+              <span class="eyebrow">Shared Mobility / Insurance Access</span>
+              <h1>Select Facility</h1>
+              <p>
+                施設名を選択すると、その施設に登録されている車両が表示されます。
+                ナンバープレートを押すと、該当車両の自賠責保険データを確認できます。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-grid">
+          <div class="section-label">Facility Selector</div>
+          <div class="section-body">
+            <div class="control" style="max-width:420px;">
+              <label for="facility">施設名を選択</label>
+              <select class="select" id="facility" data-facility-select>
+                <option>読み込み中...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section hidden" data-results-section>
+        <div class="section-grid">
+          <div class="section-label">Vehicle / Policy</div>
+          <div class="section-body">
+            <div class="content-grid">
+              <div class="card">
+                <div class="card-head">
+                  <div>
+                    <h3>設置車両一覧</h3>
+                    <p><span data-summary-name>-</span> に登録されている車両</p>
+                  </div>
+                  <span class="pill" data-summary-count>-</span>
+                </div>
+                <div class="vehicle-list" data-vehicle-list></div>
+              </div>
+
+              <div class="card">
+                <div class="card-head">
+                  <div>
+                    <h3>自賠責保険データ</h3>
+                    <p>選択した車両の情報を表示</p>
+                  </div>
+                  <span class="pill">PDF Mock</span>
+                </div>
+                <div data-detail-host>
+                  <div class="empty">車体を選択すると、自賠責保険情報とPDFプレビューがここに表示されます。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="./scripts/huv-insurance-demo.js"></script>
+</body>
+</html>
