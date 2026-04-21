@@ -57,7 +57,7 @@
       left:0;
       right:0;
       z-index:5;
-      padding:0 14px 0 10px;
+      padding:0 14px 0 0;
     }
 
     .header-inner{
@@ -66,28 +66,89 @@
       justify-content:space-between;
       align-items:center;
       gap:28px;
-      padding:12px 0;
+      padding:12px 14px 12px 8px;
     }
 
-    .header-left,
     .header-right{
       display:flex;
       align-items:center;
-      gap:30px;
+      gap:12px;
+    }
+
+    .header-right{
+      position:relative;
+      justify-content:flex-end;
+    }
+
+    .menu-toggle{
+      width:34px;
+      height:34px;
+      padding:0;
+      border:none;
+      background:transparent;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+
+    .menu-toggle span{
+      display:block;
+      width:16px;
+      height:1px;
+      margin:0;
+      background:#fff;
+      transition:transform .24s ease, opacity .24s ease;
+      box-shadow:0 1px 12px rgba(0,0,0,.28);
+    }
+
+    .menu-toggle span + span{
+      margin-top:2.5px;
+    }
+
+    .menu-toggle.is-open span:nth-child(1){
+      transform:translateY(3px) rotate(45deg);
+    }
+
+    .menu-toggle.is-open span:nth-child(2){
+      opacity:0;
+    }
+
+    .menu-toggle.is-open span:nth-child(3){
+      transform:translateY(-3px) rotate(-45deg);
+    }
+
+    .header-nav{
+      position:absolute;
+      top:56px;
+      right:0;
+      min-width:210px;
+      padding:10px 0;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(18,18,18,.82);
+      backdrop-filter:blur(16px);
+      display:none;
+      flex-direction:column;
+      box-shadow:0 16px 40px rgba(0,0,0,.22);
+    }
+
+    .header-nav.is-open{
+      display:flex;
+    }
+
+    .header-nav a{
+      padding:12px 18px;
       font-size:11px;
       text-transform:uppercase;
       letter-spacing:.14em;
       color:#fff;
       text-shadow:0 1px 18px rgba(0,0,0,.42);
-    }
-
-    .header-left a,
-    .header-right a{
       white-space:nowrap;
     }
 
-    .header-right{
-      justify-content:flex-end;
+    .header-nav a:hover{
+      background:rgba(255,255,255,.08);
     }
 
     .brand{
@@ -96,10 +157,11 @@
       align-items:center;
       padding:10px 0;
       margin-right:auto;
+      margin-left:-28px;
     }
 
     .brand img{
-      width:min(220px, 100%);
+      width:min(228px, 100%);
       height:auto;
       filter:invert(1) drop-shadow(0 1px 16px rgba(0,0,0,.32));
     }
@@ -289,12 +351,39 @@
     }
 
     .category-heading{
+      position:relative;
       padding:18px 16px;
       border-bottom:1px solid var(--line);
-      font-size:10px;
+      font-size:12px;
+      font-weight:700;
       text-transform:uppercase;
       letter-spacing:.18em;
       color:var(--sub);
+      overflow:hidden;
+    }
+
+    .category-heading::after{
+      content:"";
+      position:absolute;
+      top:50%;
+      right:16px;
+      width:10px;
+      height:10px;
+      border-top:1px solid var(--line-dark);
+      border-right:1px solid var(--line-dark);
+      transform:translateY(-50%) rotate(45deg);
+      transform-origin:center;
+      opacity:.72;
+      transition:transform .7s cubic-bezier(.22, 1, .36, 1), opacity .35s ease;
+    }
+
+    .category-heading.is-rotating{
+      color:var(--sub);
+    }
+
+    .category-heading.is-rotating::after{
+      transform:translateY(-50%) rotate(225deg);
+      opacity:1;
     }
 
     .category-body{
@@ -372,7 +461,7 @@
     }
 
     .section-spacer{
-      min-height:48px;
+      min-height:72px;
       border-bottom:none;
       background:var(--paper);
     }
@@ -464,6 +553,262 @@
       height:92px;
       object-fit:contain;
       margin-top:6px;
+    }
+
+    .price-grid{
+      display:grid;
+      grid-template-columns:minmax(0, 1.05fr) minmax(320px, .95fr);
+      gap:0;
+    }
+
+    .price-copy,
+    .price-card{
+      min-height:420px;
+      padding:22px 18px 24px;
+    }
+
+    .price-copy{
+      position:relative;
+      border-right:1px solid var(--line);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:24px;
+      padding-top:42px;
+      padding-bottom:18px;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .price-copy::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image:url("./images/optimized/price-bg.jpg");
+      background-size:cover;
+      background-position:62% center;
+      background-repeat:no-repeat;
+      opacity:.15;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .price-copy > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .price-copy h2{
+      margin:0;
+      font-size:clamp(34px, 4.6vw, 64px);
+      line-height:.96;
+      letter-spacing:-.06em;
+      text-transform:uppercase;
+      color:var(--ink);
+    }
+
+    .price-copy p{
+      margin:16px 0 0;
+      max-width:520px;
+      font-size:13px;
+      color:var(--sub);
+    }
+
+    .price-points{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:0;
+      margin-top:-22px;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+    }
+
+    .price-point{
+      padding:14px 12px 12px 0;
+      border-right:1px solid var(--line);
+      text-align:center;
+    }
+
+    .price-point:last-child{
+      border-right:none;
+      padding-right:0;
+    }
+
+    .price-point .label{
+      display:block;
+      margin-bottom:6px;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:var(--sub);
+    }
+
+    .price-point strong{
+      display:block;
+      font-size:20px;
+      line-height:1.05;
+      letter-spacing:-.04em;
+      color:var(--ink);
+    }
+
+    .price-note{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:var(--sub);
+    }
+
+    .price-card{
+      background:#efeae0;
+      display:grid;
+      align-content:start;
+      gap:18px;
+    }
+
+    .price-card-head{
+      display:grid;
+      gap:6px;
+    }
+
+    .price-card-head .label{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:var(--sub);
+    }
+
+    .price-card-head h3{
+      margin:0;
+      font-size:30px;
+      line-height:1.02;
+      letter-spacing:-.05em;
+      text-transform:uppercase;
+      color:var(--ink);
+    }
+
+    .price-card-head p{
+      margin:0;
+      font-size:13px;
+      color:var(--sub);
+      max-width:none;
+    }
+
+    .price-mode{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+    }
+
+    .price-check{
+      min-height:54px;
+      padding:0 14px;
+      border:1px solid var(--line-dark);
+      background:rgba(255,255,255,.58);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:12px;
+      letter-spacing:.08em;
+      color:var(--ink);
+      cursor:pointer;
+    }
+
+    .price-check input{
+      width:16px;
+      height:16px;
+      margin:0;
+      accent-color:var(--ink);
+      cursor:pointer;
+    }
+
+    .price-check.is-active{
+      background:rgba(255,255,255,.9);
+      border-color:var(--ink);
+    }
+
+    .price-inputs{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .price-field{
+      display:grid;
+      gap:8px;
+    }
+
+    .price-field label{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:var(--sub);
+    }
+
+    .price-field input{
+      width:100%;
+      min-height:58px;
+      padding:0 16px;
+      border:1px solid var(--line-dark);
+      background:rgba(255,255,255,.78);
+      color:var(--ink);
+      font:inherit;
+      font-size:28px;
+      line-height:1;
+      letter-spacing:-.04em;
+      appearance:textfield;
+    }
+
+    .price-field input::-webkit-outer-spin-button,
+    .price-field input::-webkit-inner-spin-button{
+      -webkit-appearance:none;
+      margin:0;
+    }
+
+    .price-field input:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+    }
+
+    .price-result{
+      padding:20px 18px;
+      border:1px solid rgba(0,0,0,.12);
+      background:rgba(255,255,255,.68);
+      display:grid;
+      gap:14px;
+    }
+
+    .price-result .label{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:var(--sub);
+    }
+
+    .price-output{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:24px;
+    }
+
+    .price-output strong{
+      font-size:clamp(34px, 4vw, 52px);
+      line-height:.95;
+      letter-spacing:-.06em;
+      color:var(--ink);
+      padding-bottom:2px;
+    }
+
+    .price-output span{
+      font-size:12px;
+      line-height:1.6;
+      color:var(--sub);
+      text-align:right;
+    }
+
+    .price-table-note{
+      font-size:12px;
+      color:var(--sub);
     }
 
     .gallery-grid{
@@ -590,15 +935,15 @@
     }
 
     .slide.s1{
-      background-image:url("./images/gallery-slide-1.jpg");
+      background-image:url("./images/optimized/gallery-slide-1.jpg");
     }
 
     .slide.s2{
-      background-image:url("./images/gallery-slide-2.jpg");
+      background-image:url("./images/optimized/gallery-slide-2.jpg");
     }
 
     .slide.s3{
-      background-image:url("./images/gallery-slide-3.jpg");
+      background-image:url("./images/optimized/gallery-slide-3.jpg");
     }
 
     .slide.s1::before{content:none}
@@ -863,6 +1208,27 @@
         grid-template-columns:1fr;
       }
 
+      .price-grid,
+      .price-mode,
+      .price-points{
+        grid-template-columns:1fr;
+      }
+
+      .price-copy{
+        border-right:none;
+        border-bottom:1px solid var(--line);
+      }
+
+      .price-point{
+        border-right:none;
+        border-bottom:1px solid var(--line);
+        padding-right:0;
+      }
+
+      .price-point:last-child{
+        border-bottom:none;
+      }
+
       .mobility-card{
         border-right:none;
         border-bottom:1px solid var(--line);
@@ -914,6 +1280,7 @@
       .brand{
         padding-top:6px;
         margin-right:auto;
+        margin-left:0;
       }
 
       .brand img{
@@ -926,8 +1293,8 @@
         margin-left:auto;
       }
 
-      .header-left{
-        display:none;
+      .category-heading{
+        padding-right:34px;
       }
 
       .hero{
@@ -1005,6 +1372,38 @@
         max-width:none;
       }
 
+      .price-copy,
+      .price-card{
+        min-height:0;
+        padding:18px 16px;
+      }
+
+      .price-copy h2{
+        font-size:clamp(24px, 9vw, 38px);
+      }
+
+      .price-copy p{
+        margin-top:8px;
+      }
+
+      .price-card-head h3{
+        font-size:24px;
+      }
+
+      .price-field input{
+        min-height:52px;
+        font-size:24px;
+      }
+
+      .price-output{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .price-output span{
+        text-align:left;
+      }
+
       .slider,
       .slide{
         height:auto;
@@ -1032,13 +1431,21 @@
   <header class="site-header">
     <div class="wrap header-inner">
       <div class="brand">
-        <img src="./images/huv-logo-horizontal-trimmed.png" alt="HUV ロゴ" />
+        <img src="./images/optimized/huv-logo-horizontal-trimmed.png" alt="HUV ロゴ" />
       </div>
       <div class="header-right">
-        <a href="#mobility">Mobility</a>
-        <a href="#howto">How To Use</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#contact">Contact</a>
+        <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="headerNav" aria-label="メニューを開く">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="header-nav" id="headerNav" aria-label="サイトメニュー">
+          <a href="#mobility">Mobility</a>
+          <a href="#howto">How To Use</a>
+          <a href="#price">Price</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#contact">Contact</a>
+        </nav>
       </div>
     </div>
   </header>
@@ -1046,7 +1453,7 @@
   <main class="page">
     <section class="hero">
       <div class="hero-image">
-        <video class="hero-video" autoplay muted loop playsinline preload="auto">
+        <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="./images/optimized/gallery-slide-1.jpg">
           <source src="./images/hero-video.mp4" type="video/mp4" />
         </video>
       </div>
@@ -1119,7 +1526,7 @@
       <div class="feature-list">
         <article class="feature">
           <div class="feature-num">Step 01</div>
-          <img class="feature-icon" src="./images/howto-app.png" alt="アプリダウンロードのアイコン" />
+          <img class="feature-icon" src="./images/optimized/howto-app.png" alt="アプリダウンロードのアイコン" loading="lazy" decoding="async" />
           <div>
             <h3>無料アプリをダウンロードして使用予約</h3>
             <p>
@@ -1130,7 +1537,7 @@
 
         <article class="feature">
           <div class="feature-num">Step 02</div>
-          <img class="feature-icon" src="./images/howto-unlock.png" alt="開錠のアイコン" />
+          <img class="feature-icon" src="./images/optimized/howto-unlock.png" alt="開錠のアイコン" loading="lazy" decoding="async" />
           <div>
             <h3>アプリを通じて開錠</h3>
             <p>
@@ -1141,7 +1548,7 @@
 
         <article class="feature">
           <div class="feature-num">Step 03</div>
-          <img class="feature-icon" src="./images/howto-payment.png" alt="決済のアイコン" />
+          <img class="feature-icon" src="./images/optimized/howto-payment.png" alt="決済のアイコン" loading="lazy" decoding="async" />
           <div>
             <h3>決済もアプリで完結</h3>
             <p>
@@ -1151,6 +1558,74 @@
         </article>
       </div>
     </section>
+
+    <div class="section-spacer wrap" aria-hidden="true"></div>
+
+    <section class="section wrap" id="price">
+      <div class="category-heading">Price</div>
+      <div class="price-grid">
+        <div class="price-copy">
+          <div>
+            <h2>15分 375円から。</h2>
+            <p>15分ごとのわかりやすい料金設定。短時間の移動から気軽に利用できます。</p>
+          </div>
+
+          <div class="price-points" aria-label="料金のポイント">
+            <div class="price-point">
+              <span class="label">Start</span>
+              <strong>15分 / 375円</strong>
+            </div>
+            <div class="price-point">
+              <span class="label">1 Hour</span>
+              <strong>60分 / 1,500円</strong>
+            </div>
+            <div class="price-point">
+              <span class="label">Max</span>
+              <strong>12時間 / 9,000円</strong>
+            </div>
+          </div>
+
+          <div class="price-note">料金は15分単位で計算され、12時間料金が上限となります。</div>
+        </div>
+
+        <div class="price-card">
+          <div class="price-card-head">
+            <h3>利用時間から料金を表示</h3>
+            <p>選択した入力方法で、15分単位に切り上げた料金を表示します。</p>
+          </div>
+
+          <div class="price-mode" role="group" aria-label="料金計算の入力方法">
+            <label class="price-check" id="hoursModeLabel" for="modeHours">
+              <input id="modeHours" name="priceMode" type="checkbox" />
+              利用時間数で計算
+            </label>
+            <label class="price-check" id="minutesModeLabel" for="modeMinutes">
+              <input id="modeMinutes" name="priceMode" type="checkbox" />
+              利用分数で計算
+            </label>
+          </div>
+
+          <div class="price-inputs">
+            <div class="price-field">
+              <label for="priceInput" id="priceInputLabel">入力方法を選択してください</label>
+              <input id="priceInput" type="number" min="0" max="720" step="1" value="" inputmode="numeric" placeholder="" disabled />
+            </div>
+          </div>
+
+          <div class="price-result" aria-live="polite">
+            <span class="label">Estimated Price</span>
+            <div class="price-output">
+              <strong id="priceValue">-</strong>
+              <span id="priceDuration">入力方法を選択して数字を入力してください</span>
+            </div>
+          </div>
+
+          <div class="price-table-note">計算結果は税込料金です。</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-spacer wrap" aria-hidden="true"></div>
 
     <section class="section wrap" id="gallery">
       <div class="category-heading">Gallery</div>
@@ -1197,7 +1672,7 @@
         <div class="cta-main">
           <div class="bottom-grid">
             <div class="bottom-left">
-              <img class="square-logo" src="./images/huv-logo-square-trimmed.png" alt="HUV 正方形ロゴ" />
+              <img class="square-logo" src="./images/optimized/huv-logo-square-trimmed.png" alt="HUV 正方形ロゴ" loading="lazy" decoding="async" />
               <div class="cta-actions">
                 <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=tXXefBLjeEmMcUNczENLjFiwHE9kCUhPi9AHtulHIeRURFgySlZEM05XRko0MTFQUkUzUzdZNUwxWi4u" target="_blank" rel="noopener noreferrer" class="btn btn-dark">Contact</a>
                 <a href="https://ysakurai390.github.io/HUV_user-guide/" target="_blank" rel="noopener noreferrer" class="btn">User Guide</a>
@@ -1207,12 +1682,12 @@
             <div class="bottom-right">
               <div class="qr-card">
                 <div class="qr-label">Download Here / iOS</div>
-                <div class="qr-box has-image"><img src="./images/glafit-ios-qr.png" alt="iOSアプリダウンロード用QRコード" /></div>
+                <div class="qr-box has-image"><img src="./images/glafit-ios-qr.png" alt="iOSアプリダウンロード用QRコード" loading="lazy" decoding="async" /></div>
                 <p>iPhoneをご利用の方は<a href="https://apps.apple.com/jp/app/glafit/id6480165798" target="_blank" rel="noopener noreferrer">こちら</a></p>
               </div>
               <div class="qr-card">
                 <div class="qr-label">Download Here / Android</div>
-                <div class="qr-box has-image"><img src="./images/glafit-google-qr.png" alt="Androidアプリダウンロード用QRコード" /></div>
+                <div class="qr-box has-image"><img src="./images/glafit-google-qr.png" alt="Androidアプリダウンロード用QRコード" loading="lazy" decoding="async" /></div>
                 <p>Androidをご利用の方は<a href="https://play.google.com/store/apps/details?id=com.glafit.app" target="_blank" rel="noopener noreferrer">こちら</a></p>
               </div>
             </div>
@@ -1239,6 +1714,76 @@
   </main>
 
   <script>
+    (function(){
+      const headings = document.querySelectorAll('.category-heading');
+
+      if(!headings.length || typeof IntersectionObserver === 'undefined'){
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if(!entry.isIntersecting){
+            return;
+          }
+
+          const heading = entry.target;
+          heading.classList.remove('is-rotating');
+          void heading.offsetWidth;
+          heading.classList.add('is-rotating');
+
+          window.setTimeout(() => {
+            heading.classList.remove('is-rotating');
+          }, 820);
+        });
+      }, {
+        threshold: 0.65
+      });
+
+      headings.forEach((heading) => {
+        observer.observe(heading);
+      });
+    })();
+
+    (function(){
+      const toggle = document.getElementById('menuToggle');
+      const nav = document.getElementById('headerNav');
+
+      if(!toggle || !nav){
+        return;
+      }
+
+      const links = nav.querySelectorAll('a');
+
+      function setMenu(open){
+        toggle.classList.toggle('is-open', open);
+        nav.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+      }
+
+      toggle.addEventListener('click', () => {
+        setMenu(!nav.classList.contains('is-open'));
+      });
+
+      links.forEach((link) => {
+        link.addEventListener('click', () => {
+          setMenu(false);
+        });
+      });
+
+      document.addEventListener('click', (event) => {
+        if(!nav.contains(event.target) && !toggle.contains(event.target)){
+          setMenu(false);
+        }
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if(event.key === 'Escape'){
+          setMenu(false);
+        }
+      });
+    })();
+
     (function(){
       const track = document.getElementById('sliderTrack');
       const navs = document.querySelectorAll('.nav-seg');
@@ -1283,6 +1828,139 @@
 
       render();
       start();
+    })();
+
+    (function(){
+      const modeHours = document.getElementById('modeHours');
+      const modeMinutes = document.getElementById('modeMinutes');
+      const hoursModeLabel = document.getElementById('hoursModeLabel');
+      const minutesModeLabel = document.getElementById('minutesModeLabel');
+      const inputLabel = document.getElementById('priceInputLabel');
+      const priceInput = document.getElementById('priceInput');
+      const valueEl = document.getElementById('priceValue');
+      const durationEl = document.getElementById('priceDuration');
+
+      if(!modeHours || !modeMinutes || !hoursModeLabel || !minutesModeLabel || !inputLabel || !priceInput || !valueEl || !durationEl){
+        return;
+      }
+
+      function clamp(value, min, max){
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function calcFare(totalMinutes){
+        if(totalMinutes <= 0) return 0;
+        const rounded = Math.min(720, Math.ceil(totalMinutes / 15) * 15);
+        if(rounded <= 60) return rounded * 25;
+        if(rounded <= 120) return 1500 + ((rounded - 60) * 20);
+        if(rounded <= 180) return 2700 + ((rounded - 120) * 15);
+        return 3600 + ((rounded - 180) * 10);
+      }
+
+      function formatDuration(totalMinutes){
+        if(totalMinutes <= 0){
+          return '0分として計算';
+        }
+
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        const parts = [];
+
+        if(hours > 0) parts.push(`${hours}時間`);
+        if(minutes > 0) parts.push(`${minutes}分`);
+
+        return `${parts.join('') || '0分'}<br />${totalMinutes}分として計算`;
+      }
+
+      function getMode(){
+        if(modeHours.checked) return 'hours';
+        if(modeMinutes.checked) return 'minutes';
+        return '';
+      }
+
+      function updateModeUI(){
+        const mode = getMode();
+        hoursModeLabel.classList.toggle('is-active', mode === 'hours');
+        minutesModeLabel.classList.toggle('is-active', mode === 'minutes');
+
+        if(mode === 'hours'){
+          inputLabel.textContent = '利用時間数';
+          priceInput.placeholder = '例: 2';
+          priceInput.min = '0';
+          priceInput.max = '12';
+          priceInput.step = '1';
+          priceInput.disabled = false;
+        } else if(mode === 'minutes'){
+          inputLabel.textContent = '利用分数';
+          priceInput.placeholder = '例: 90';
+          priceInput.min = '0';
+          priceInput.max = '720';
+          priceInput.step = '1';
+          priceInput.disabled = false;
+        } else {
+          inputLabel.textContent = '入力方法を選択してください';
+          priceInput.placeholder = '';
+          priceInput.disabled = true;
+          priceInput.value = '';
+        }
+      }
+
+      function updateFare(){
+        const mode = getMode();
+        const rawValue = Number(priceInput.value);
+
+        if(!mode){
+          valueEl.textContent = '-';
+          durationEl.textContent = '入力方法を選択して数字を入力してください';
+          return;
+        }
+
+        if(priceInput.value === '' || Number.isNaN(rawValue)){
+          valueEl.textContent = '-';
+          durationEl.textContent = '数字を入力すると料金を表示します';
+          return;
+        }
+
+        const inputValue = mode === 'hours'
+          ? clamp(rawValue, 0, 12)
+          : clamp(rawValue, 0, 720);
+        const totalMinutes = mode === 'hours'
+          ? Math.min(720, inputValue * 60)
+          : inputValue;
+        const roundedMinutes = totalMinutes <= 0 ? 0 : Math.min(720, Math.ceil(totalMinutes / 15) * 15);
+        const fare = calcFare(totalMinutes);
+
+        priceInput.value = String(inputValue);
+        valueEl.textContent = `¥${fare.toLocaleString('ja-JP')}`;
+        durationEl.innerHTML = formatDuration(roundedMinutes);
+      }
+
+      function syncMode(target){
+        if(target === 'hours' && modeHours.checked){
+          modeMinutes.checked = false;
+        }
+
+        if(target === 'minutes' && modeMinutes.checked){
+          modeHours.checked = false;
+        }
+
+        priceInput.value = '';
+        updateModeUI();
+        updateFare();
+      }
+
+      modeHours.addEventListener('change', () => {
+        syncMode('hours');
+      });
+
+      modeMinutes.addEventListener('change', () => {
+        syncMode('minutes');
+      });
+
+      priceInput.addEventListener('input', updateFare);
+
+      updateModeUI();
+      updateFare();
     })();
   </script>
 </body>
