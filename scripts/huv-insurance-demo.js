@@ -58,6 +58,22 @@ function buildPdfUrl(filePath){
   return supabaseClient.storage.from(STORAGE_BUCKET).getPublicUrl(filePath).data.publicUrl;
 }
 
+function sanitizeFileName(fileName){
+  const lastDotIndex = fileName.lastIndexOf(".");
+  const rawBase = lastDotIndex >= 0 ? fileName.slice(0, lastDotIndex) : fileName;
+  const rawExt = lastDotIndex >= 0 ? fileName.slice(lastDotIndex).toLowerCase() : "";
+  const normalizedBase = rawBase
+    .normalize("NFKD")
+    .replace(/[^\x00-\x7F]/g, "")
+    .replace(/[^a-zA-Z0-9_-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80);
+  const safeBase = normalizedBase || "insurance-file";
+  const safeExt = rawExt && /^[.a-z0-9]+$/.test(rawExt) ? rawExt : ".pdf";
+  return `${safeBase}${safeExt}`;
+}
+
 async function restRequest(path, { method = "GET", token = null, body = null, contentType = "application/json", prefer = null } = {}){
   const headers = {
     apikey: SUPABASE_ANON_KEY
@@ -547,7 +563,7 @@ function buildAdminPage(){
   }
 
   async function uploadVehiclePdf(file, facilityId, vehicleId){
-    const safeName = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+    const safeName = `${Date.now()}-${sanitizeFileName(file.name)}`;
     const path = `${facilityId}/${vehicleId}/${safeName}`;
     await restRequest(`/storage/v1/object/${STORAGE_BUCKET}/${path}`, {
       method: "POST",

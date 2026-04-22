@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>株式会社NanoAct | インサイドセールス募集</title>
+  <meta
+    name="description"
+    content="株式会社NanoActのインサイドセールス業務委託募集LP。PCだけでOK、在宅可、時間自由、ノルマなし。"
+  />
+  <style>
+    :root{
+      --bg:#f4f1e8;
+      --paper:#fcfbf7;
+      --ink:#171613;
+      --sub:#666153;
+      --line:#d8d1c3;
+      --brand:#a5a086;
+      --brand-deep:#6f6a57;
+      --black:#111111;
+      --accent:#ece7da;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
+      line-height:1.6;
+      letter-spacing:.01em;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    img,svg{
+      display:block;
+      max-width:100%;
+    }
+
+    .wrap{
+      width:min(calc(100% - 32px), var(--max));
+      margin:0 auto;
+    }
+
+    .site-header{
+      padding:2px 0 0;
+    }
+
+    .header-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:4px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .brand img{
+      width:160px;
+      height:auto;
+    }
+
+    .brand-copy{
+      display:grid;
+      gap:1px;
+    }
+
+    .brand-copy strong{
+      font-size:13px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .brand-copy span{
+      color:var(--sub);
+      font-size:12px;
+    }
+
+    .header-cta{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border:1px solid var(--ink);
+      background:var(--ink);
+      color:#fff;
+      font-size:11px;
+      font-weight:700;
+    }
+
+    .hero{
+      padding:28px 0 18px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    .hero-main{
+      padding:32px 0 20px;
+      border-top:3px solid var(--black);
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:18px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--brand-deep);
+    }
+
+    .eyebrow::before{
+      content:"";
+      width:28px;
+      height:1px;
+      background:var(--brand-deep);
+    }
+
+    h1{
+      margin:0 0 14px;
+      font-size:clamp(26px, 3.6vw, 46px);
+      line-height:1.08;
+      letter-spacing:-.05em;
+    }
+
+    .hero-lead{
+      max-width:44ch;
+      margin:0;
+      color:var(--sub);
+      font-size:16px;
+    }
+
+    .hero-lead-line{
+      display:block;
+      white-space:nowrap;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:28px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-height:48px;
+      padding:0 18px;
+      border:1px solid var(--ink);
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .btn.primary{
+      background:var(--ink);
+      color:#fff;
+    }
+
+    .btn.ghost{
+      background:transparent;
+    }
+
+    .hero-side{
+      border-left:1px solid var(--line);
+      padding-left:24px;
+    }
+
+    .side-block{
+      padding:0 0 18px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:18px;
+    }
+
+    .side-block:last-child{
+      margin-bottom:0;
+    }
+
+    .side-block h2{
+      margin:0 0 8px;
+      font-size:16px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .side-block p{
+      margin:0;
+      color:var(--sub);
+      font-size:13px;
+    }
+
+    .icon-row{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .icon-tile{
+      display:grid;
+      grid-template-columns:40px 1fr;
+      gap:10px;
+      align-items:start;
+      padding:12px 0;
+      border-top:1px solid var(--line);
+    }
+
+    .icon-box{
+      width:40px;
+      height:40px;
+      display:grid;
+      place-items:center;
+      background:var(--accent);
+      border:1px solid var(--line);
+    }
+
+    .icon-tile strong{
+      display:block;
+      font-size:13px;
+      line-height:1.4;
+    }
+
+    .icon-tile span{
+      display:block;
+      color:var(--sub);
+      font-size:11px;
+      line-height:1.5;
+    }
+
+    section{
+      padding:16px 0;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:20px;
+      padding:0 0 14px;
+      border-bottom:1px solid var(--line);
+      margin-bottom:18px;
+    }
+
+    .section-head h2{
+      margin:0;
+      font-size:28px;
+      line-height:1.08;
+      letter-spacing:-.04em;
+    }
+
+    .section-head p{
+      margin:0;
+      max-width:40ch;
+      color:var(--sub);
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .jobs{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:18px;
+    }
+
+    .job-card,
+    .pay-card,
+    .flow-card,
+    .contact-card,
+    .company-card{
+      background:var(--paper);
+      border:1px solid var(--line);
+    }
+
+    .job-card{
+      padding:20px;
+    }
+
+    .job-top{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      margin-bottom:14px;
+    }
+
+    .job-mark{
+      width:52px;
+      height:52px;
+      display:grid;
+      place-items:center;
+      background:var(--ink);
+      color:#fff;
+      font-weight:800;
+      font-size:20px;
+      flex:0 0 52px;
+    }
+
+    .job-card h3{
+      margin:0;
+      font-size:22px;
+      line-height:1.2;
+      letter-spacing:-.03em;
+    }
+
+    .job-card p{
+      margin:0;
+      color:var(--sub);
+      font-size:14px;
+    }
+
+    .bullet-list{
+      display:grid;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .bullet{
+      display:grid;
+      grid-template-columns:20px 1fr;
+      gap:10px;
+      align-items:start;
+      font-size:14px;
+    }
+
+    .bullet i{
+      display:block;
+      width:12px;
+      height:12px;
+      margin-top:5px;
+      background:var(--brand);
+    }
+
+    .conditions{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:12px;
+    }
+
+    .condition{
+      padding:18px 16px;
+      background:var(--paper);
+      border-top:3px solid var(--ink);
+      border-right:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      border-left:1px solid var(--line);
+    }
+
+    .condition .icon-box{
+      margin-bottom:14px;
+    }
+
+    .condition h3{
+      margin:0 0 8px;
+      font-size:16px;
+      line-height:1.35;
+    }
+
+    .condition p,
+    .condition small{
+      margin:0;
+      color:var(--sub);
+      font-size:12px;
+    }
+
+    .condition small{
+      display:block;
+      margin-top:8px;
+      font-size:11px;
+    }
+
+    .pay-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+    }
+
+    .pay-example{
+      padding:22px;
+      background:var(--paper);
+      border-top:3px solid var(--brand-deep);
+      border-right:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      border-left:1px solid var(--line);
+    }
+
+    .pay-example h3{
+      margin:0 0 16px;
+      font-size:24px;
+      line-height:1.18;
+      letter-spacing:-.03em;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .stat{
+      padding:14px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+
+    .stat span{
+      display:block;
+      color:var(--sub);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .stat strong{
+      display:block;
+      margin-top:6px;
+      font-size:28px;
+      line-height:1.05;
+      letter-spacing:-.05em;
+    }
+
+    .formula{
+      padding:14px;
+      border:1px solid var(--ink);
+      background:#fff;
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .formula strong{
+      font-size:18px;
+    }
+
+    .model-list{
+      display:grid;
+      gap:14px;
+    }
+
+    .model-case{
+      padding:14px;
+      border:1px solid var(--line);
+      background:#fff;
+    }
+
+    .model-case h4{
+      margin:0 0 8px;
+      font-size:17px;
+      line-height:1.35;
+    }
+
+    .model-case p{
+      margin:0;
+      color:var(--sub);
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .model-note{
+      margin-top:14px;
+      color:var(--sub);
+      font-size:11px;
+      line-height:1.6;
+    }
+
+    .pay-cards{
+      display:grid;
+      gap:12px;
+    }
+
+    .pay-card{
+      display:grid;
+      grid-template-columns:44px 1fr;
+      gap:12px;
+      padding:16px;
+    }
+
+    .pay-card h4{
+      margin:0 0 4px;
+      font-size:16px;
+    }
+
+    .pay-card p{
+      margin:0;
+      color:var(--sub);
+      font-size:13px;
+    }
+
+    .flow{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:14px;
+    }
+
+    .flow-card{
+      padding:18px;
+      border-top:3px solid var(--black);
+    }
+
+    .flow-no{
+      display:inline-block;
+      margin-bottom:12px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      color:var(--brand-deep);
+    }
+
+    .flow-card h3{
+      margin:0 0 6px;
+      font-size:18px;
+    }
+
+    .flow-card p{
+      margin:0;
+      color:var(--sub);
+      font-size:13px;
+    }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns:1fr .95fr;
+      gap:18px;
+    }
+
+    .contact-card,
+    .company-card{
+      padding:22px;
+    }
+
+    .contact-card{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+    }
+
+    .contact-card h2{
+      margin:0 0 10px;
+      font-size:34px;
+      line-height:1.06;
+      letter-spacing:-.04em;
+    }
+
+    .contact-card p{
+      margin:0;
+      color:rgba(255,255,255,.78);
+      font-size:14px;
+    }
+
+    .contact-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:20px;
+    }
+
+    .contact-actions .btn{
+      border-color:#fff;
+      color:#fff;
+    }
+
+    .contact-actions .btn.primary{
+      background:#fff;
+      color:var(--ink);
+    }
+
+    .company-card h2{
+      margin:0 0 14px;
+      font-size:28px;
+      line-height:1.08;
+      letter-spacing:-.04em;
+    }
+
+    .info{
+      display:grid;
+      gap:14px;
+    }
+
+    .info-row{
+      display:grid;
+      grid-template-columns:90px 1fr;
+      gap:12px;
+      padding-bottom:14px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .info-row:last-child{
+      padding-bottom:0;
+      border-bottom:none;
+    }
+
+    .info-row strong{
+      font-size:12px;
+      color:var(--sub);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .info-row div{
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .footer{
+      padding:18px 0 28px;
+      color:#7a7465;
+      font-size:12px;
+    }
+
+    @media (max-width: 1024px){
+      .hero-grid,
+      .pay-grid,
+      .contact-grid{
+        grid-template-columns:1fr;
+      }
+
+      .jobs,
+      .conditions,
+      .flow{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+      }
+
+      .hero-side{
+        border-left:none;
+        border-top:1px solid var(--line);
+        padding-left:0;
+        padding-top:20px;
+      }
+    }
+
+    @media (max-width: 720px){
+      .wrap{
+        width:min(calc(100% - 20px), var(--max));
+      }
+
+      .header-bar,
+      .section-head{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .brand{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .brand img{
+        width:150px;
+      }
+
+      .section-head p{
+        white-space:normal;
+      }
+
+      h1{
+        font-size:42px;
+      }
+
+      .jobs,
+      .conditions,
+      .flow,
+      .stats,
+      .icon-row{
+        grid-template-columns:1fr;
+      }
+
+      .hero-lead-line{
+        white-space:normal;
+      }
+
+      .hero-actions,
+      .contact-actions{
+        flex-direction:column;
+      }
+
+      .btn,
+      .header-cta{
+        width:100%;
+      }
+
+      .info-row{
+        grid-template-columns:1fr;
+        gap:4px;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <header class="site-header">
+    <div class="wrap">
+      <div class="header-bar">
+        <div class="brand">
+          <img src="./images/nanoact-logo-khaki.png" alt="NanoAct" />
+          <div class="brand-copy">
+            <strong>Inside Sales Recruit</strong>
+            <span>Mirattendご利用の方へ 業務委託募集のご案内</span>
+          </div>
+        </div>
+        <a class="header-cta" href="https://forms.office.com/Pages/ResponsePage.aspx?id=tXXefBLjeEmMcUNczENLjFiwHE9kCUhPi9AHtulHIeRUN1ZTWENITlYwRkc4NUVHMVJITTNTODhWRy4u" target="_blank" rel="noopener noreferrer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16v10H4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="m5 8 7 5 7-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          問い合わせ
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-main">
+            <div class="eyebrow">Remote / Flexible / No quota</div>
+            <h1>PCだけでインサイドセールス。<br />副業にぴったりです。</h1>
+            <p class="hero-lead">
+              <span class="hero-lead-line">助成金診断のご案内と、厚労省助成金の診断・申請サポート。</span>
+              <span class="hero-lead-line">在宅中心で、時間も柔軟。副業でも取り組みやすい体制を整えています。</span>
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="https://forms.office.com/Pages/ResponsePage.aspx?id=tXXefBLjeEmMcUNczENLjFiwHE9kCUhPi9AHtulHIeRUN1ZTWENITlYwRkc4NUVHMVJITTNTODhWRy4u" target="_blank" rel="noopener noreferrer">問い合わせ</a>
+              <a class="btn ghost" href="https://nanoact.jp/" target="_blank" rel="noopener noreferrer">会社情報へ</a>
+            </div>
+          </div>
+
+          <aside class="hero-side">
+            <div class="side-block">
+              <h2>Point</h2>
+              <p>必要なのはPCだけ。ノルマなし。在宅OK。週に数時間からでもご相談いただけます。</p>
+              <div class="icon-row">
+                <div class="icon-tile">
+                  <div class="icon-box" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <rect x="4" y="5" width="16" height="11" stroke="currentColor" stroke-width="1.8"/>
+                      <path d="M9 19h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>PCだけ</strong>
+                    <span>すぐ始めやすい</span>
+                  </div>
+                </div>
+                <div class="icon-tile">
+                  <div class="icon-box" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M4 12h16M12 4v16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>在宅OK</strong>
+                    <span>場所は不問</span>
+                  </div>
+                </div>
+                <div class="icon-tile">
+                  <div class="icon-box" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9Z" stroke="currentColor" stroke-width="1.8"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>時間自由</strong>
+                    <span>週4時間から</span>
+                  </div>
+                </div>
+                <div class="icon-tile">
+                  <div class="icon-box" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                      <path d="M4 12h0" stroke="currentColor"/>
+                      <rect x="4" y="4" width="16" height="16" stroke="currentColor" stroke-width="1.8"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong>ノルマなし</strong>
+                    <span>無理なく継続</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="side-block">
+              <h2>Reward</h2>
+              <p>時給、架電単価、成果報酬、その組み合わせまで柔軟にご相談できます。</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>業務内容</h2>
+          <p>2つの業務から、経験や得意に応じてご相談できます。</p>
+        </div>
+
+        <div class="jobs">
+          <article class="job-card">
+            <div class="job-top">
+              <div class="job-mark">A</div>
+              <div>
+                <h3>電話による助成金診断のご案内</h3>
+              </div>
+            </div>
+            <p>企業さまへお電話し、助成金診断の予約獲得につなげる業務です。</p>
+            <div class="bullet-list">
+              <div class="bullet"><i aria-hidden="true"></i><span>主な役割はアポイント獲得</span></div>
+              <div class="bullet"><i aria-hidden="true"></i><span>シンプルで始めやすい業務</span></div>
+            </div>
+          </article>
+
+          <article class="job-card">
+            <div class="job-top">
+              <div class="job-mark">B</div>
+              <div>
+                <h3>厚労省助成金の診断・申請サポート</h3>
+              </div>
+            </div>
+            <p>商談の中で状況を確認し、診断や申請サポートをご案内する業務です。</p>
+            <div class="bullet-list">
+              <div class="bullet"><i aria-hidden="true"></i><span>企業ごとの状況をヒアリング</span></div>
+              <div class="bullet"><i aria-hidden="true"></i><span>商談経験を活かしやすい業務</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>条件</h2>
+          <p>副業でも、しっかり稼働でも。柔軟に調整できます。</p>
+        </div>
+
+        <div class="conditions">
+          <article class="condition">
+            <div class="icon-box" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="5" width="16" height="11" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M9 19h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>必要なものはPCだけ</h3>
+            <p>特別な機材は不要です。</p>
+          </article>
+
+          <article class="condition">
+            <div class="icon-box" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12h14M12 5v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <rect x="4" y="4" width="16" height="16" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+            </div>
+            <h3>在宅OK</h3>
+            <p>業務場所は問いません。</p>
+          </article>
+
+          <article class="condition">
+            <div class="icon-box" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="4" y="4" width="16" height="16" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+            </div>
+            <h3>業務時間は自由</h3>
+            <p>現在、週4時間から週15時間の方までが在籍してます。</p>
+            <small>＊時給での業務委託の場合は除きます。</small>
+          </article>
+
+          <article class="condition">
+            <div class="icon-box" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <rect x="4" y="4" width="16" height="16" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+            </div>
+            <h3>ノルマなし</h3>
+            <p>自分のペースで進められます。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>報酬</h2>
+          <p>個々の働き方や得意に応じて決めています。</p>
+        </div>
+
+        <div class="pay-grid">
+          <div class="pay-example">
+            <h3>報酬イメージ（モデルケース）</h3>
+            <div class="model-list">
+              <div class="model-case">
+                <h4>パターン1: スキマ時間（週3〜5時間）</h4>
+                <p>週3〜5時間程度の稼働で、月3万〜8万円前後になるケースがあります。</p>
+                <p>（架電数の目安: 月120〜250件程度 / 有効アポ: 月2〜8件程度）</p>
+              </div>
+              <div class="model-case">
+                <h4>パターン2: 副業のメイン（週5〜10時間）</h4>
+                <p>週5〜10時間程度の稼働で、月6万〜15万円前後になるケースがあります。</p>
+                <p>（架電数の目安: 月250〜500件程度 / 有効アポ: 月5〜15件程度）</p>
+              </div>
+              <div class="model-case">
+                <h4>パターン3: しっかり稼働（週10〜15時間）</h4>
+                <p>週10〜15時間程度の稼働で、月10万〜25万円前後になるケースがあります。</p>
+                <p>（架電数の目安: 月400〜750件程度 / 有効アポ: 月8〜25件程度）</p>
+              </div>
+            </div>
+            <div class="model-note">上記はあくまでモデルケースです。実績や稼働条件により上下します。</div>
+          </div>
+
+          <div class="pay-cards">
+            <article class="pay-card">
+              <div class="icon-box" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 8h16v8H4z" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M8 12h.01M16 12h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <h4>時給</h4>
+                <p>安定して取り組みたい方向け。</p>
+              </div>
+            </article>
+            <article class="pay-card">
+              <div class="icon-box" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 18h12M8 15V9m4 6V6m4 9v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <h4>架電単価</h4>
+                <p>行動量に応じて報酬設定。</p>
+              </div>
+            </article>
+            <article class="pay-card">
+              <div class="icon-box" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3v18M7.5 7.5c0-1.66 2.01-3 4.5-3s4.5 1.34 4.5 3-2.01 3-4.5 3-4.5 1.34-4.5 3 2.01 3 4.5 3 4.5-1.34 4.5-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <h4>成果報酬</h4>
+                <p>得意を活かした設計が可能です。</p>
+              </div>
+            </article>
+            <article class="pay-card">
+              <div class="icon-box" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 12h16M12 4v16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <rect x="4" y="4" width="16" height="16" stroke="currentColor" stroke-width="1.8"/>
+                </svg>
+              </div>
+              <div>
+                <h4>組み合わせ</h4>
+                <p>お気軽にご相談ください。</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>流れ</h2>
+          <p>相談ベースで始められます。</p>
+        </div>
+
+        <div class="flow">
+          <article class="flow-card">
+            <span class="flow-no">01</span>
+            <h3>お問い合わせ</h3>
+            <p>まずはメールでご連絡ください。</p>
+          </article>
+          <article class="flow-card">
+            <span class="flow-no">02</span>
+            <h3>条件のすり合わせ</h3>
+            <p>時間や報酬の希望を確認します。</p>
+          </article>
+          <article class="flow-card">
+            <span class="flow-no">03</span>
+            <h3>業務開始</h3>
+            <p>条件が合えば在宅でスタートです。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="company">
+      <div class="wrap">
+        <div class="contact-grid">
+          <div class="contact-card">
+            <h2>気になったら、<br />まずはご相談ください。</h2>
+            <p>働き方も報酬も、できるだけ柔軟にご相談しています。</p>
+            <div class="contact-actions">
+              <a class="btn primary" href="https://forms.office.com/Pages/ResponsePage.aspx?id=tXXefBLjeEmMcUNczENLjFiwHE9kCUhPi9AHtulHIeRUN1ZTWENITlYwRkc4NUVHMVJITTNTODhWRy4u" target="_blank" rel="noopener noreferrer">問い合わせ</a>
+              <a class="btn" href="#top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); return false;">ページ上部へ</a>
+            </div>
+          </div>
+
+          <div class="company-card">
+            <h2>会社情報</h2>
+            <div class="info">
+              <div class="info-row">
+                <strong>会社名</strong>
+                <div>株式会社NanoAct（ナノアクト）</div>
+              </div>
+              <div class="info-row">
+                <strong>所在地</strong>
+                <div>〒870-0021<br />大分県大分市府内町3-4-20<br />大分恒和ビル4階</div>
+              </div>
+              <div class="info-row">
+                <strong>WEB</strong>
+                <div><a href="https://nanoact.jp/" target="_blank" rel="noopener noreferrer">https://nanoact.jp/</a></div>
+              </div>
+              <div class="info-row">
+                <strong>MAIL</strong>
+                <div><a href="mailto:info@nanoact.jp">info@nanoact.jp</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">© NanoAct Co., Ltd.</div>
+  </footer>
+</body>
+</html>
