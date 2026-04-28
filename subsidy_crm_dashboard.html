@@ -2669,7 +2669,7 @@
         .single();
       if (error) {
         notifySupabaseFallback('grant_crm_records.insert', error);
-        return createRecordLocal(payload);
+        throw error;
       }
       return data;
     }
@@ -2683,14 +2683,14 @@
       const inserted = [];
       const chunkSize = 200;
       for (let i = 0; i < payloads.length; i += chunkSize) {
-        const chunk = payloads.slice(i, i + chunkSize);
+        const chunk = payloads.slice(i, i + chunkSize).map(normalizeCrmForSupabase);
         const { data, error } = await supabaseClient
           .from(SUPABASE_TABLE_CRM)
           .insert(chunk)
           .select();
         if (error) {
           notifySupabaseFallback('grant_crm_records.insert_many', error);
-          return payloads.map(createRecordLocal);
+          throw error;
         }
         inserted.push(...(data || []));
       }
@@ -2711,7 +2711,7 @@
         .single();
       if (error) {
         notifySupabaseFallback('grant_crm_records.update', error);
-        return updateRecordLocal(id, payload);
+        throw error;
       }
       return data;
     }
@@ -2730,8 +2730,7 @@
         .maybeSingle();
       if (error) {
         notifySupabaseFallback('grant_crm_records.delete', error);
-        deleteRecordLocal(id);
-        return;
+        throw error;
       }
       if (!data) deleteRecordLocal(id);
     }
@@ -2772,7 +2771,7 @@
         .single();
       if (error) {
         notifySupabaseFallback('teleapo_records.insert', error);
-        return taCreateLocal(payload);
+        throw error;
       }
       return data;
     }
@@ -2780,13 +2779,14 @@
     async function taCreateMany(payloads) {
       if (!isSupabaseAuthenticated()) throw new Error('共有ログインが必要です');
       if (!hasSupabase()) return payloads.map(item => taCreateLocal(item));
+      const normalizedPayloads = payloads.map(normalizeTaForSupabase);
       const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_TA)
-        .insert(payloads)
+        .insert(normalizedPayloads)
         .select();
       if (error) {
         notifySupabaseFallback('teleapo_records.bulk_insert', error);
-        return payloads.map(item => taCreateLocal(item));
+        throw error;
       }
       return data || [];
     }
@@ -2805,7 +2805,7 @@
         .single();
       if (error) {
         notifySupabaseFallback('teleapo_records.update', error);
-        return taUpdateLocal(id, payload);
+        throw error;
       }
       return data;
     }
@@ -2824,8 +2824,7 @@
         .maybeSingle();
       if (error) {
         notifySupabaseFallback('teleapo_records.delete', error);
-        taDeleteLocal(id);
-        return;
+        throw error;
       }
       if (!data) taDeleteLocal(id);
     }
@@ -2842,7 +2841,7 @@
         .eq('added_date', date);
       if (error) {
         notifySupabaseFallback('teleapo_records.delete_by_date', error);
-        taDeleteByDateLocal(date);
+        throw error;
       }
     }
 
