@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>助成金CRM ダッシュボード</title>
+  <link rel="icon" type="image/png" href="./images/nanoact-favicon.png" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1505,6 +1506,8 @@
             </div>
           </div>
           <button class="btn btn-secondary" id="resetFilter"><i class="fas fa-undo"></i> リセット</button>
+          <label class="btn btn-excel" for="crmImportFileInput"><i class="fas fa-file-upload"></i> Excelインポート</label>
+          <input type="file" id="crmImportFileInput" accept=".xlsx,.xls,.csv" style="display:none;" />
           <button class="btn btn-primary" id="exportCsvBtn"><i class="fas fa-download"></i> CSVダウンロード</button>
         </div>
 
@@ -2095,9 +2098,10 @@
     let taImportHeaders = [];
     let taImportRows = [];
     let taImportMapping = {};
+    let crmImportInProgress = false;
     let supabaseFallbackNotified = false;
     let supabaseReadyLogged = false;
-    let useLocalDataMode = false;
+    let useLocalDataMode = { crm: false, teleapo: false };
     let emptySupabaseFallbackNotified = false;
     let migrationAttempted = false;
     let sharedSettings = { ...DEFAULT_SHARED_SETTINGS };
@@ -2417,9 +2421,16 @@
       console.log('[CRM] Supabase connected:', SUPABASE_URL);
     }
 
+    function getFallbackBucket(scope) {
+      if (String(scope).includes('teleapo_records')) return 'teleapo';
+      if (String(scope).includes('grant_crm_records')) return 'crm';
+      return null;
+    }
+
     function notifySupabaseFallback(scope, error) {
       console.error(`[CRM][Supabase][${scope}]`, error);
-      useLocalDataMode = true;
+      const bucket = getFallbackBucket(scope);
+      if (bucket) useLocalDataMode[bucket] = true;
       if (supabaseFallbackNotified) return;
       supabaseFallbackNotified = true;
       ensureLocalFallbackData();
@@ -2429,13 +2440,12 @@
     function maybeUseExistingLocalData(scope, setter) {
       const localData = setter();
       if (!localData.length) return null;
-      useLocalDataMode = true;
       if (!emptySupabaseFallbackNotified) {
         emptySupabaseFallbackNotified = true;
-        console.warn(`[CRM][Supabase][${scope}] Supabase is empty, using existing local data`);
-        showToast('Supabaseが空のため、既存のローカルデータを表示しています', 'error');
+        console.warn(`[CRM][Supabase][${scope}] Supabase returned empty data; local fallback is disabled to avoid showing stale browser-only records`);
+        showToast('Supabaseのデータが空です。古いブラウザ保存データは自動表示しないようにしました', 'error');
       }
-      return localData;
+      return null;
     }
 
     function sortByCreatedAtDesc(records) {
@@ -2574,7 +2584,7 @@
     }
 
     async function migrateLocalDataToSupabaseIfNeeded() {
-      if (!hasSupabase() || useLocalDataMode || migrationAttempted) return;
+      if (!hasSupabase() || migrationAttempted) return;
       migrationAttempted = true;
       const localCrm = loadJson(CRM_KEY, []);
       const localTa = loadJson(TA_KEY, []);
@@ -2614,7 +2624,8 @@
         setMigrationState(migrationState);
         if (migrationState.crm || migrationState.teleapo) {
           emptySupabaseFallbackNotified = false;
-          useLocalDataMode = false;
+          useLocalDataMode.crm = false;
+          useLocalDataMode.teleapo = false;
           showToast('ローカルデータをSupabaseへ移行しました', 'success');
         }
       } catch (error) {
@@ -2627,7 +2638,7 @@
         allRecords = [];
         return allRecords;
       }
-      if (useLocalDataMode) return fetchAllLocal();
+      if (useLocalDataMode.crm) return fetchAllLocal();
       if (!hasSupabase()) return fetchAllLocal();
       const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_CRM)
@@ -2638,6 +2649,7 @@
         return fetchAllLocal();
       }
       logSupabaseReady();
+      useLocalDataMode.crm = false;
       if ((data || []).length === 0) {
         const localData = maybeUseExistingLocalData('grant_crm_records.select', fetchAllLocal);
         if (localData) return localData;
@@ -2649,9 +2661,10 @@
     async function createRecord(payload) {
       if (!isSupabaseAuthenticated()) throw new Error('共有ログインが必要です');
       if (!hasSupabase()) return createRecordLocal(payload);
+      const normalizedPayload = normalizeCrmForSupabase(payload);
       const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_CRM)
-        .insert(payload)
+        .insert(normalizedPayload)
         .select()
         .single();
       if (error) {
@@ -2661,12 +2674,38 @@
       return data;
     }
 
+    async function createRecordMany(payloads) {
+      if (!payloads.length) return [];
+      if (!isSupabaseAuthenticated()) throw new Error('共有ログインが必要です');
+      if (!hasSupabase()) {
+        return payloads.map(createRecordLocal);
+      }
+      const inserted = [];
+      const chunkSize = 200;
+      for (let i = 0; i < payloads.length; i += chunkSize) {
+        const chunk = payloads.slice(i, i + chunkSize);
+        const { data, error } = await supabaseClient
+          .from(SUPABASE_TABLE_CRM)
+          .insert(chunk)
+          .select();
+        if (error) {
+          notifySupabaseFallback('grant_crm_records.insert_many', error);
+          return payloads.map(createRecordLocal);
+        }
+        inserted.push(...(data || []));
+      }
+      return inserted;
+    }
+
     async function updateRecord(id, payload) {
       if (!isSupabaseAuthenticated()) throw new Error('共有ログインが必要です');
       if (!hasSupabase()) return updateRecordLocal(id, payload);
+      const normalizedPayload = normalizeCrmForSupabase({ ...payload, id });
+      delete normalizedPayload.id;
+      delete normalizedPayload.created_at;
       const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_CRM)
-        .update(payload)
+        .update(normalizedPayload)
         .eq('id', id)
         .select()
         .single();
@@ -2683,14 +2722,18 @@
         deleteRecordLocal(id);
         return;
       }
-      const { error } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_CRM)
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .select('id')
+        .maybeSingle();
       if (error) {
         notifySupabaseFallback('grant_crm_records.delete', error);
         deleteRecordLocal(id);
+        return;
       }
+      if (!data) deleteRecordLocal(id);
     }
 
     async function taFetchAll() {
@@ -2698,7 +2741,7 @@
         taAllRecords = [];
         return taAllRecords;
       }
-      if (useLocalDataMode) return taFetchAllLocal();
+      if (useLocalDataMode.teleapo) return taFetchAllLocal();
       if (!hasSupabase()) return taFetchAllLocal();
       const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_TA)
@@ -2709,6 +2752,7 @@
         return taFetchAllLocal();
       }
       logSupabaseReady();
+      useLocalDataMode.teleapo = false;
       if ((data || []).length === 0) {
         const localData = maybeUseExistingLocalData('teleapo_records.select', taFetchAllLocal);
         if (localData) return localData;
@@ -2720,9 +2764,10 @@
     async function taCreate(payload) {
       if (!isSupabaseAuthenticated()) throw new Error('共有ログインが必要です');
       if (!hasSupabase()) return taCreateLocal(payload);
+      const normalizedPayload = normalizeTaForSupabase(payload);
       const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_TA)
-        .insert(payload)
+        .insert(normalizedPayload)
         .select()
         .single();
       if (error) {
@@ -2749,9 +2794,12 @@
     async function taUpdate(id, payload) {
       if (!isSupabaseAuthenticated()) throw new Error('共有ログインが必要です');
       if (!hasSupabase()) return taUpdateLocal(id, payload);
+      const normalizedPayload = normalizeTaForSupabase({ ...payload, id });
+      delete normalizedPayload.id;
+      delete normalizedPayload.created_at;
       const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_TA)
-        .update(payload)
+        .update(normalizedPayload)
         .eq('id', id)
         .select()
         .single();
@@ -2768,14 +2816,18 @@
         taDeleteLocal(id);
         return;
       }
-      const { error } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from(SUPABASE_TABLE_TA)
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .select('id')
+        .maybeSingle();
       if (error) {
         notifySupabaseFallback('teleapo_records.delete', error);
         taDeleteLocal(id);
+        return;
       }
+      if (!data) taDeleteLocal(id);
     }
 
     async function taDeleteByDate(date) {
@@ -3085,6 +3137,129 @@
 
     function updateMultiSelectLabel(labelId, values, allText) {
       document.getElementById(labelId).textContent = values.length ? values.join('・') : allText;
+    }
+
+    function normalizeImportedText(value) {
+      return String(value ?? '')
+        .replace(/\u3000/g, ' ')
+        .replace(/\u200b/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function normalizeImportedStatus(value) {
+      const text = normalizeImportedText(value);
+      if (text === '受注（入金済み') return '受注（入金済み）';
+      return text;
+    }
+
+    function normalizeImportedAccuracy(value) {
+      const text = normalizeImportedText(value);
+      return text.replace(/～/g, '~');
+    }
+
+    function parseImportedDate(value) {
+      if (value == null || value === '') return '';
+      if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return value.toISOString().slice(0, 10);
+      }
+      const text = normalizeImportedText(value);
+      if (!text) return '';
+      const m = text.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+      if (m) {
+        return `${m[1]}-${String(m[2]).padStart(2, '0')}-${String(m[3]).padStart(2, '0')}`;
+      }
+      const parsed = new Date(text);
+      if (!Number.isNaN(parsed.getTime())) return parsed.toISOString().slice(0, 10);
+      return '';
+    }
+
+    function parseImportedNumber(value) {
+      if (value == null || value === '') return 0;
+      if (typeof value === 'number' && Number.isFinite(value)) return Math.round(value);
+      const text = normalizeImportedText(value).replace(/[¥￥,\s]/g, '');
+      const num = Number(text);
+      return Number.isFinite(num) ? Math.round(num) : 0;
+    }
+
+    function importedRecordKey(record) {
+      return [
+        normalizeImportedText(record.company_name).toLowerCase(),
+        record.acquired_date || '',
+        record.application_date || '',
+        Number(record.revenue || 0)
+      ].join('|');
+    }
+
+    function convertCrmSheetRowsToRecords(rows) {
+      return rows.map(row => {
+        const record = {
+          acquirer: normalizeImportedText(row['獲得者']),
+          acquired_date: parseImportedDate(row['獲得日']),
+          negotiator: normalizeImportedText(row['商談者']),
+          company_name: normalizeImportedText(row['企業名']),
+          contact_person: normalizeImportedText(row['担当者']),
+          url: normalizeImportedText(row['URL']),
+          email: normalizeImportedText(row['Email']),
+          phone: normalizeImportedText(row['電話番号']),
+          mobile: normalizeImportedText(row['携帯電話']),
+          first_meeting_date: parseImportedDate(row['初回商談日']),
+          reschedule_count: normalizeImportedText(row['リスケ回数']),
+          na_status: normalizeImportedStatus(row['NAステータス']),
+          accuracy: normalizeImportedAccuracy(row['決着確度']),
+          ng_reason: normalizeImportedText(row['NGの場合のみ記載']).replace(/Ｎ/g, 'N'),
+          order_amount: parseImportedNumber(row['受給金額']),
+          initial_cost: parseImportedNumber(row['初期費用']),
+          sr_deposit: parseImportedNumber(row['受注時\n社労士着手金'] || row['受注時社労士着手金']),
+          sr_advance: parseImportedNumber(row['引継ぎ社労士\n着手金'] || row['引継ぎ社労士着手金']),
+          revenue: parseImportedNumber(row['売上（税抜）']),
+          gross_profit: parseImportedNumber(row['粗利（税抜）']),
+          application_date: parseImportedDate(row['申込日']),
+          expected_payment_date: parseImportedDate(row['入金\n予定日'] || row['入金予定日']),
+          payment_date: parseImportedDate(row['入金日']),
+          negotiation_result: normalizeImportedText(row['商談結果']),
+          notes: '',
+          created_at: parseImportedDate(row['入力日時']) ? `${parseImportedDate(row['入力日時'])}T00:00:00.000Z` : undefined
+        };
+        if (!record.revenue) {
+          record.revenue = calcRevenue(record.initial_cost, record.sr_deposit);
+        }
+        if (!record.gross_profit) {
+          record.gross_profit = calcGrossProfit(record.initial_cost, record.sr_deposit, record.sr_advance);
+        }
+        if (record.created_at === undefined) delete record.created_at;
+        return record;
+      }).filter(record => record.company_name && !record.company_name.includes('これが見えてたらいじる前に藤本に連絡してください'));
+    }
+
+    async function importCrmWorkbook(file) {
+      if (crmImportInProgress) return;
+      crmImportInProgress = true;
+      try {
+        const buffer = await file.arrayBuffer();
+        const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array', cellDates: true });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        if (!sheet) throw new Error('CRMシートが見つかりません');
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false });
+        const converted = convertCrmSheetRowsToRecords(rows);
+        await fetchAll();
+        const existingKeys = new Set(allRecords.map(importedRecordKey));
+        const deduped = converted.filter(record => !existingKeys.has(importedRecordKey(record)));
+        if (!deduped.length) {
+          showToast('新しく追加できるCRMデータはありませんでした', 'error');
+          return;
+        }
+        if (!confirm(`CRMデータを ${deduped.length} 件インポートします。よろしいですか？`)) return;
+        await createRecordMany(deduped);
+        await fetchAll();
+        if (getActiveViewName() === 'records') applyFilters();
+        else navigateTo('records');
+        showToast(`${deduped.length}件のCRMデータを取り込みました`, 'success');
+      } finally {
+        crmImportInProgress = false;
+        const input = document.getElementById('crmImportFileInput');
+        if (input) input.value = '';
+      }
     }
 
     function applyFilters() {
@@ -3961,6 +4136,15 @@
       });
       document.getElementById('filterMonth').addEventListener('change', applyFilters);
       document.getElementById('resetFilter').addEventListener('click', resetRecordFilters);
+      document.getElementById('crmImportFileInput').addEventListener('change', event => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        importCrmWorkbook(file).catch(error => {
+          console.error('[CRM][import]', error);
+          showToast(`CRMインポートに失敗しました: ${error.message || '不明なエラー'}`, 'error');
+          event.target.value = '';
+        });
+      });
       document.getElementById('exportCsvBtn').addEventListener('click', () => {
         const records = filteredRecords.length ? filteredRecords : allRecords;
         const headers = ['企業名', '担当者', '獲得者', '獲得日', 'NAステータス', '売上', '申込日', '入金予定日', '入金日', '商談結果'];
