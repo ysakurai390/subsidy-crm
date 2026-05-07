@@ -68,11 +68,15 @@ create table if not exists public.app_settings (
   negotiators jsonb not null default '[]'::jsonb,
   ta_staffs jsonb not null default '[]'::jsonb,
   allowed_guest_emails jsonb not null default '[]'::jsonb,
+  guest_ta_staff_map jsonb not null default '{}'::jsonb,
   guest_password_hash text not null default '',
   guest_password_updated_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.app_settings
+  add column if not exists guest_ta_staff_map jsonb not null default '{}'::jsonb;
 
 create or replace function public.guest_email_is_allowed()
 returns boolean
@@ -139,6 +143,7 @@ insert into public.app_settings (
   negotiators,
   ta_staffs,
   allowed_guest_emails,
+  guest_ta_staff_map,
   guest_password_hash
 )
 values (
@@ -147,6 +152,7 @@ values (
   '["奥村","樋口","櫻井"]'::jsonb,
   '["奥村","樋口","櫻井"]'::jsonb,
   '[]'::jsonb,
+  '{}'::jsonb,
   ''
 )
 on conflict (id) do nothing;

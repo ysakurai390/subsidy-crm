@@ -1711,6 +1711,15 @@
               <div class="settings-add-row"><input type="email" id="settingsGuestEmailInput" class="settings-input" placeholder="team@example.com" /><button class="btn btn-primary btn-sm" id="settingsGuestEmailAddBtn"><i class="fas fa-plus"></i> 追加</button></div>
             </div>
             <div class="settings-block">
+              <div class="settings-block-title"><i class="fas fa-user-check"></i> ゲストメールとテレアポ担当者の紐付け</div>
+              <div class="settings-list" id="settingsGuestTaMapList"></div>
+              <div class="settings-add-row">
+                <select id="settingsGuestTaMapEmail" class="settings-input" style="max-width:280px;"></select>
+                <select id="settingsGuestTaMapStaff" class="settings-input" style="max-width:220px;"></select>
+                <button class="btn btn-primary btn-sm" id="settingsGuestTaMapAddBtn"><i class="fas fa-link"></i> 保存</button>
+              </div>
+            </div>
+            <div class="settings-block">
               <div class="settings-block-title"><i class="fas fa-user-lock"></i> ゲスト共通パスワード</div>
               <div class="form-grid">
                 <div class="form-group"><label>新しい共通パスワード</label><input type="password" id="settingsGuestPw" /></div>
@@ -1942,6 +1951,7 @@
       negotiators: ['奥村', '樋口', '櫻井'],
       taStaffs: ['奥村', '樋口', '櫻井'],
       allowedGuestEmails: [],
+      guestTaStaffMap: {},
       guestPasswordHash: '',
       guestPasswordUpdatedAt: null
     };
@@ -2149,11 +2159,19 @@
       const allowedGuestEmails = Array.isArray(row?.allowed_guest_emails)
         ? [...new Set(row.allowed_guest_emails.map(value => String(value || '').trim().toLowerCase()).filter(Boolean))]
         : [];
+      const guestTaStaffMap = row?.guest_ta_staff_map && typeof row.guest_ta_staff_map === 'object' && !Array.isArray(row.guest_ta_staff_map)
+        ? Object.fromEntries(
+            Object.entries(row.guest_ta_staff_map)
+              .map(([email, staff]) => [String(email || '').trim().toLowerCase(), String(staff || '').trim()])
+              .filter(([email, staff]) => email && staff)
+          )
+        : {};
       return {
         acquirers: Array.isArray(row?.acquirers) ? row.acquirers : DEFAULT_SHARED_SETTINGS.acquirers,
         negotiators: Array.isArray(row?.negotiators) ? row.negotiators : DEFAULT_SHARED_SETTINGS.negotiators,
         taStaffs: Array.isArray(row?.ta_staffs) ? row.ta_staffs : DEFAULT_SHARED_SETTINGS.taStaffs,
         allowedGuestEmails,
+        guestTaStaffMap,
         guestPasswordHash: row?.guest_password_hash || '',
         guestPasswordUpdatedAt: row?.guest_password_updated_at || null
       };
@@ -2170,6 +2188,23 @@
 
     function isSupabaseAuthenticated() {
       return !!authSession?.user;
+    }
+
+    function getCurrentGuestEmail() {
+      return String(authSession?.user?.email || '').trim().toLowerCase();
+    }
+
+    function getCurrentAssignedTaStaff() {
+      if (isAdmin()) return null;
+      const email = getCurrentGuestEmail();
+      return email ? (sharedSettings.guestTaStaffMap?.[email] || null) : null;
+    }
+
+    function getAvailableTaStaffsForCurrentUser() {
+      const merged = getMergedSettings();
+      if (isAdmin()) return merged.taStaffs;
+      const assigned = getCurrentAssignedTaStaff();
+      return assigned ? [assigned] : [];
     }
 
     function isGuestAccessConfigured() {
@@ -2214,6 +2249,7 @@
         negotiators: partial.negotiators ?? sharedSettings.negotiators,
         ta_staffs: partial.taStaffs ?? sharedSettings.taStaffs,
         allowed_guest_emails: normalizedAllowedGuestEmails,
+        guest_ta_staff_map: partial.guestTaStaffMap ?? sharedSettings.guestTaStaffMap,
         guest_password_hash: partial.guestPasswordHash ?? sharedSettings.guestPasswordHash,
         guest_password_updated_at: partial.guestPasswordUpdatedAt ?? sharedSettings.guestPasswordUpdatedAt
       };
@@ -2742,10 +2778,19 @@
       }
       if (useLocalDataMode.teleapo) return taFetchAllLocal();
       if (!hasSupabase()) return taFetchAllLocal();
-      const { data, error } = await supabaseClient
+      const assignedStaff = getCurrentAssignedTaStaff();
+      let query = supabaseClient
         .from(SUPABASE_TABLE_TA)
         .select('*')
         .order('created_at', { ascending: false });
+      if (!isAdmin()) {
+        if (!assignedStaff) {
+          taAllRecords = [];
+          return taAllRecords;
+        }
+        query = query.eq('ta_staff', assignedStaff);
+      }
+      const { data, error } = await query;
       if (error) {
         notifySupabaseFallback('teleapo_records.select', error);
         return taFetchAllLocal();
@@ -2949,12 +2994,15 @@
     function populateSettingsSelects() {
       CRM_SETTINGS = loadSettings();
       const merged = getMergedSettings();
+      const taStaffOptions = getAvailableTaStaffsForCurrentUser();
       populateSimpleSelect('acquirer', merged.acquirers);
       populateSimpleSelect('negotiator', merged.negotiators);
-      populateSimpleSelect('ta_staff', merged.taStaffs);
-      populateSimpleSelect('taFilterStaff', [''].concat(merged.taStaffs), false);
+      populateSimpleSelect('ta_staff', taStaffOptions);
+      populateSimpleSelect('taFilterStaff', [''].concat(taStaffOptions), false);
       const taFilterStaff = document.getElementById('taFilterStaff');
-      taFilterStaff.innerHTML = '<option value="">担当者：すべて</option>' + merged.taStaffs.map(v => `<option>${escapeHtml(v)}</option>`).join('');
+      taFilterStaff.innerHTML = '<option value="">担当者：すべて</option>' + taStaffOptions.map(v => `<option>${escapeHtml(v)}</option>`).join('');
+      populateSimpleSelect('settingsGuestTaMapEmail', sharedSettings.allowedGuestEmails);
+      populateSimpleSelect('settingsGuestTaMapStaff', merged.taStaffs);
       populateSimpleSelect('reschedule_count', RESCHEDULE_OPTIONS, false);
       document.getElementById('reschedule_count').innerHTML = '<option value="">なし</option>' + RESCHEDULE_OPTIONS.filter(Boolean).map(v => `<option>${v}</option>`).join('');
       populateSimpleSelect('na_status', STATUS_OPTIONS);
@@ -3638,6 +3686,7 @@
       renderSettingsList('settingsNegotiatorList', merged.negotiators, 'negotiators');
       renderSettingsList('settingsTaStaffList', merged.taStaffs, 'taStaffs');
       renderSettingsList('settingsGuestEmailList', sharedSettings.allowedGuestEmails, 'allowedGuestEmails');
+      renderGuestTaStaffMapList();
       const bootstrapRequired = isBootstrapRequired();
       document.getElementById('settingsBootstrapHint').style.display = bootstrapRequired ? 'block' : 'none';
       document.getElementById('settingsBootstrapBtn').style.display = bootstrapRequired ? 'inline-flex' : 'none';
@@ -3648,6 +3697,15 @@
     function renderSettingsList(id, items, key) {
       document.getElementById(id).innerHTML = items.map((item, index) => `
         <span class="settings-tag">${escapeHtml(item)}<button data-settings-remove="${key}:${index}"><i class="fas fa-times"></i></button></span>`).join('');
+    }
+
+    function renderGuestTaStaffMapList() {
+      const entries = Object.entries(sharedSettings.guestTaStaffMap || {});
+      const target = document.getElementById('settingsGuestTaMapList');
+      target.innerHTML = entries.length
+        ? entries.map(([email, staff]) => `
+          <span class="settings-tag">${escapeHtml(email)} → ${escapeHtml(staff)}<button data-settings-remove="guestTaStaffMap:${escapeHtml(email)}"><i class="fas fa-times"></i></button></span>`).join('')
+        : '<span style="font-size:12px;color:#94a3b8;">未設定</span>';
     }
 
     function applyRoleUI() {
@@ -3967,6 +4025,7 @@
       document.getElementById('settingsNegotiatorAddBtn').onclick = () => settingsAdd('negotiators', 'settingsNegotiatorInput');
       document.getElementById('settingsTaStaffAddBtn').onclick = () => settingsAdd('taStaffs', 'settingsTaStaffInput');
       document.getElementById('settingsGuestEmailAddBtn').onclick = () => settingsAdd('allowedGuestEmails', 'settingsGuestEmailInput');
+      document.getElementById('settingsGuestTaMapAddBtn').onclick = () => saveGuestTaStaffMapping();
       document.getElementById('settingsBootstrapBtn').onclick = async () => {
         try {
           await bootstrapGuestAccess();
@@ -4027,7 +4086,22 @@
       if (!current.includes(value)) {
         current.push(value);
         try {
-          await saveSharedSettings({ [targetKey]: current });
+          const patch = { [targetKey]: current };
+          if (targetKey === 'allowedGuestEmails') {
+            const nextMap = { ...(sharedSettings.guestTaStaffMap || {}) };
+            Object.keys(nextMap).forEach(email => {
+              if (!current.includes(email)) delete nextMap[email];
+            });
+            patch.guestTaStaffMap = nextMap;
+          }
+          if (targetKey === 'taStaffs') {
+            const nextMap = { ...(sharedSettings.guestTaStaffMap || {}) };
+            Object.keys(nextMap).forEach(email => {
+              if (!current.includes(nextMap[email])) delete nextMap[email];
+            });
+            patch.guestTaStaffMap = nextMap;
+          }
+          await saveSharedSettings(patch);
           populateSettingsSelects();
           renderSettings();
           showToast(`「${value}」を追加しました`, 'success');
@@ -4036,6 +4110,22 @@
         }
       }
       input.value = '';
+    }
+
+    async function saveGuestTaStaffMapping() {
+      const email = document.getElementById('settingsGuestTaMapEmail').value.trim().toLowerCase();
+      const staff = document.getElementById('settingsGuestTaMapStaff').value.trim();
+      if (!email) return showToast('紐付けるメールアドレスを選択してください', 'error');
+      if (!staff) return showToast('紐付けるテレアポ担当者を選択してください', 'error');
+      const nextMap = { ...(sharedSettings.guestTaStaffMap || {}), [email]: staff };
+      try {
+        await saveSharedSettings({ guestTaStaffMap: nextMap });
+        populateSettingsSelects();
+        renderSettings();
+        showToast(`「${email} → ${staff}」を保存しました`, 'success');
+      } catch (error) {
+        showToast(`保存に失敗しました: ${error.message || '不明なエラー'}`, 'error');
+      }
     }
 
     function taImportSheetToRows(sheet) {
@@ -4335,9 +4425,10 @@
       });
       document.getElementById('taModalSaveBtn').addEventListener('click', async () => {
         try {
+          const assignedStaff = getCurrentAssignedTaStaff();
           const payload = {
             added_date: taEditId ? (taAllRecords.find(r => r.id === taEditId)?.added_date || offsetDate(0)) : offsetDate(0),
-            ta_staff: document.getElementById('ta_staff').value,
+            ta_staff: assignedStaff || document.getElementById('ta_staff').value,
             company_name: document.getElementById('ta_company_name').value,
             company_name_kana: document.getElementById('ta_company_name_kana').value,
             last_name: document.getElementById('ta_last_name').value,
@@ -4532,13 +4623,36 @@
           acquirers: 'acquirers',
           negotiators: 'negotiators',
           taStaffs: 'taStaffs',
-          allowedGuestEmails: 'allowedGuestEmails'
+          allowedGuestEmails: 'allowedGuestEmails',
+          guestTaStaffMap: 'guestTaStaffMap'
         };
         const targetKey = sharedKeyMap[key];
         if (!targetKey) return;
-        const nextValues = [...(sharedSettings[targetKey] || [])];
-        nextValues.splice(Number(index), 1);
-        saveSharedSettings({ [targetKey]: nextValues }).then(() => {
+        let patch;
+        if (targetKey === 'guestTaStaffMap') {
+          const nextMap = { ...(sharedSettings.guestTaStaffMap || {}) };
+          delete nextMap[index];
+          patch = { guestTaStaffMap: nextMap };
+        } else {
+          const nextValues = [...(sharedSettings[targetKey] || [])];
+          nextValues.splice(Number(index), 1);
+          patch = { [targetKey]: nextValues };
+          if (targetKey === 'allowedGuestEmails') {
+            const nextMap = { ...(sharedSettings.guestTaStaffMap || {}) };
+            Object.keys(nextMap).forEach(email => {
+              if (!nextValues.includes(email)) delete nextMap[email];
+            });
+            patch.guestTaStaffMap = nextMap;
+          }
+          if (targetKey === 'taStaffs') {
+            const nextMap = { ...(sharedSettings.guestTaStaffMap || {}) };
+            Object.keys(nextMap).forEach(email => {
+              if (!nextValues.includes(nextMap[email])) delete nextMap[email];
+            });
+            patch.guestTaStaffMap = nextMap;
+          }
+        }
+        saveSharedSettings(patch).then(() => {
           populateSettingsSelects();
           renderSettings();
         }).catch(error => {
